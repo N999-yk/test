@@ -11,6 +11,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            background-color: #111; /* Fond sombre pour voir si le conteneur s'affiche */
         }
     </style>
 </head>
@@ -27,6 +28,7 @@
             maxZoom: 5
         });
 
+        // Cette ligne indique où aller chercher vos images
         L.tileLayer('{z}/{z},{x},{y}.jpg', {
             minZoom: 0,
             maxZoom: 5,
