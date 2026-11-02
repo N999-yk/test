@@ -36,15 +36,23 @@
         });
 
         // Chargement des tuiles JPG avec l'ordre inversé et le paramètre tms
-        L.tileLayer('{z}/{z},{y},{x}.jpg', {
+        var tileLayer = L.tileLayer('{z}/{z},{y},{x}.jpg', {
             minZoom: 0,
             maxZoom: 5,
             tms: true,
             attribution: 'Ma carte interactive'
         }).addTo(map);
 
-        // Centrage de la carte à l'ouverture (Niveau de zoom 1, centré sur la tuile Y:3, X:3)
-        map.setView([3, 3], 1);
+        // ASTUCE : Cette fonction calcule automatiquement les limites de vos tuiles 
+        // et cadre la vue exactement au milieu de votre carte au chargement !
+        tileLayer.on('load', function() {
+            // Vous pouvez ajuster les coordonnées des coins ici si nécessaire [MinY, MinX] et [MaxY, MaxX]
+            var bounds = [[0, 0], [-10, 10]]; 
+            map.fitBounds(bounds);
+        });
+        
+        // Sécurité par défaut si l'événement load tarde
+        map.setView([-4, 4], 1);
     </script>
 
 </body>
