@@ -43,8 +43,15 @@
             attribution: 'Leonida Project'
         }).addTo(map);
 
-        // Centrage neutre exact au milieu de la grille de base
-        map.setView([256, 256], 0);
+        // Définition de l'espace total de la carte en pixels
+        var southWest = map.unproject([0, 512], 0);
+        var northEast = map.unproject([512, 0], 0);
+        var bounds = L.latLngBounds(southWest, northEast);
+
+        map.setMaxBounds(bounds);
+        
+        // Centrage ajusté plus bas pour placer l'île exactement au milieu de l'écran
+        map.setView([384, 256], 0);
     </script>
 
 </body>
