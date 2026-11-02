@@ -48,9 +48,9 @@
         var northEast = map.unproject([512, 0], 0);
         var bounds = L.latLngBounds(southWest, northEast);
 
-        // Applique les limites et centre la vue dessus
+        // Applique les limites et centre la vue (légèrement décalée vers le bas pour cibler le milieu de l'île)
         map.setMaxBounds(bounds);
-        map.setView([256, 256], 0);
+        map.setView([180, 256], 0);
     </script>
 
 </body>
