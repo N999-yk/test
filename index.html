@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Carte en Tuiles</title>
+
+    <!-- Intégration du CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #111;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <!-- Intégration du JS de Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. Initialisation de la carte pour une image/plan personnalisé
+        var map = L.map('map', {
+            crs: L.CRS.Simple, 
+            minZoom: 0,
+            maxZoom: 5, // Ajustez selon le nombre de dossiers (ici de 0 à 5)
+            zoomControl: true
+        });
+
+        // 2. Chargement des tuiles adaptées à votre structure : {z}/{x},{y},{z}.jpg
+        // (Remplacez le chemin si vos dossiers sont dans un sous-dossier, ex: 'dossier/{z}/{x},{y},{z}.jpg')
+        var tileLayer = L.tileLayer('{z}/{x},{y},{z}.jpg', {
+            minZoom: 0,
+            maxZoom: 5,
+            tileSize: 256, // Taille standard d'une tuile
+            noWrap: true,
+            tms: false,
+            attribution: 'Ma Map'
+        }).addTo(map);
+
+        // 3. Centrage initial de la carte
+        map.setView([0, 0], 2);
+    </script>
+</body>
+</html>
