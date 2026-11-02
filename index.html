@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ma Carte en Tuiles</title>
 
-    <!-- Intégration du CSS de Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
@@ -14,7 +13,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background: #111; /* Fond sombre pour les zones vides */
+            background: #111;
         }
     </style>
 </head>
@@ -22,10 +21,9 @@
 
     <div id="map"></div>
 
-    <!-- Intégration du JS de Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Initialisation de la carte pour un plan/image personnalisé (sans coordonnées GPS réelles)
+        // 1. Initialisation avec CRS.Simple
         var map = L.map('map', {
             crs: L.CRS.Simple,
             minZoom: 0,
@@ -33,18 +31,29 @@
             zoomControl: true
         });
 
-        // 2. Chargement des tuiles avec votre structure exacte : {z}/{x},{y},{z}.jpg
+        // 2. Définition de la taille totale de la map en pixels pour forcer Leaflet à voir grand 
+        // (Basé sur vos coordonnées max approximatives : x=99, y=78 au zoom 5 -> 100 * 256 = 25600 pixels)
+        var w = 25600; 
+        var h = 20480;
+        
+        var southWest = map.unproject([0, h], 5);
+        var northEast = map.unproject([w, 0], 5);
+        var bounds = new L.LatLngBounds(southWest, northEast);
+
+        map.setMaxBounds(bounds);
+
+        // 3. Chargement des tuiles
         L.tileLayer('{z}/{x},{y},{z}.jpg', {
             minZoom: 0,
             maxZoom: 5,
             tileSize: 256,
             noWrap: true,
-            tms: false,
-            attribution: 'Leonida v2'
+            bounds: bounds,
+            attribution: 'Ma Map'
         }).addTo(map);
 
-        // 3. Centrage initial de la carte (ajustez ces valeurs si besoin pour centrer sur votre zone principale)
-        map.setView([0, 0], 2);
+        // 4. Centrage initial au milieu de la map pour voir tout le monde
+        map.fitBounds(bounds);
     </script>
 </body>
 </html>
