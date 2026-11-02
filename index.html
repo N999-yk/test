@@ -28,11 +28,10 @@
             maxZoom: 5
         });
 
-        // Cette ligne indique où aller chercher vos images
-        L.tileLayer('{z}/{z},{x},{y}.jpg', {
+        L.tileLayer('{z}/{z},{y},{x}.jpg', {
             minZoom: 0,
             maxZoom: 5,
-            tms: true, // Inverse l'axe Y pour rétablir l'ordre des tuiles
+            tms: true,
             attribution: 'Ma carte'
         }).addTo(map);
 
