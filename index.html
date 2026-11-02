@@ -43,8 +43,10 @@
             attribution: 'Ma carte interactive'
         }).addTo(map);
 
-        // Centrage corrigé directement au milieu de l'île (Coordonnées Y:5, X:5 au zoom 1)
-        map.setView([5, 5], 1);
+        // Définition automatique des limites de la carte pour qu'elle se centre toute seule au milieu
+        // [Coin haut-gauche, Coin bas-droite]
+        var bounds = [[0, 0], [-8, 8]];
+        map.fitBounds(bounds);
     </script>
 
 </body>
