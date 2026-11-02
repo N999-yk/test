@@ -19,7 +19,7 @@
 </head>
 <body>
 
-    <div id='map'></div>
+    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -38,9 +38,8 @@
 
         map.setMaxBounds(bounds);
 
-        // Correction ici : Vos fichiers dans le dossier {z} s'appellent directement {x},{y}.jpg 
-        // (sans répéter le z à la fin, d'après les erreurs de la console)
-        L.tileLayer('{z}/{x},{y}.jpg', {
+        // Remettez {z}/{x},{y},{z}.jpg car vos fichiers ont bien le Z à la fin de leur nom d'après l'URL !
+        L.tileLayer('{z}/{x},{y},{z}.jpg', {
             minZoom: 0,
             maxZoom: 5,
             tileSize: 256,
