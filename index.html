@@ -44,13 +44,13 @@
         }).addTo(map);
 
         // Définition de l'espace total de la carte en pixels pour un centrage automatique parfait
-        var southWest = map.unproject([0, 100], 0);
-        var northEast = map.unproject([100, 0], 0);
+        var southWest = map.unproject([0, 150], 0);
+        var northEast = map.unproject([150, 0], 0);
         var bounds = L.latLngBounds(southWest, northEast);
 
         // Applique les limites et centre la vue dessus
         map.setMaxBounds(bounds);
-        map.setView([55, 55], 0);
+        map.setView([50, 50], 0);
     </script>
 
 </body>
