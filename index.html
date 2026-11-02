@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Carte en Tuiles</title>
+    <title>Ma Map Personnalisée</title>
 
+    <!-- Ces lignes chargent Leaflet automatiquement depuis Internet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         html, body, #map {
@@ -13,7 +15,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background: #111;
+            background: #111; /* Fond sombre au cas où une tuile manque */
         }
     </style>
 </head>
@@ -21,34 +23,30 @@
 
     <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Initialisation de la carte (CRS.Simple est idéal pour les cartes de jeux / plans non géographiques)
         var map = L.map('map', {
             crs: L.CRS.Simple,
-            minZoom: 0,
-            maxZoom: 5,
-            zoomControl: true
+            minZoom: 1,
+            maxZoom: 5
+        }).setView([0, 0], 2);
+
+        // Couche personnalisée pour lire vos fichiers nommés "zoom,x,y.jpg"
+        L.TileLayer.CustomZoomXY = L.TileLayer.extend({
+            getTileUrl: function (coords) {
+                // coords.z = niveau de zoom, coords.x = x, coords.y = y
+                return './' + coords.z + ',' + coords.x + ',' + coords.y + '.jpg';
+            }
         });
 
-        var w = 25600; 
-        var h = 20480;
-        var southWest = map.unproject([0, h], 5);
-        var northEast = map.unproject([w, 0], 5);
-        var bounds = new L.LatLngBounds(southWest, northEast);
-
-        map.setMaxBounds(bounds);
-
-        // Remettez {z}/{x},{y},{z}.jpg car vos fichiers ont bien le Z à la fin de leur nom d'après l'URL !
-        L.tileLayer('{z}/{x},{y},{z}.jpg', {
-            minZoom: 0,
+        // Ajout de vos tuiles à la carte
+        new L.TileLayer.CustomZoomXY('', {
+            minZoom: 1,
             maxZoom: 5,
-            tileSize: 256,
-            noWrap: true,
-            bounds: bounds,
-            attribution: 'Ma Map'
+            tileSize: 256, // Taille standard des tuiles (changez si vos images font une autre taille, ex: 512)
+            noWrap: true
         }).addTo(map);
-
-        map.fitBounds(bounds);
     </script>
+
 </body>
 </html>
