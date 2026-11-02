@@ -43,10 +43,8 @@
             attribution: 'Ma carte interactive'
         }).addTo(map);
 
-        // Définition automatique des limites de la carte pour qu'elle se centre toute seule au milieu
-        // [Coin haut-gauche, Coin bas-droite]
-        var bounds = [[0, 0], [-8, 8]];
-        map.fitBounds(bounds);
+        // Centrage précis sur la tuile centrale du niveau 0 : [Y, X] au zoom 0
+        map.setView([1, 1], 0);
     </script>
 
 </body>
