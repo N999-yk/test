@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-        /* Force la carte à prendre tout l'écran avec le fond bleu océan pour remplacer les tuiles manquantes */
+        /* Force la carte à prendre tout l'écran avec le fond bleu océan */
         html, body, #map {
             width: 100%;
             height: 100%;
@@ -36,23 +36,15 @@
         });
 
         // Chargement des tuiles JPG avec l'ordre inversé et le paramètre tms
-        var tileLayer = L.tileLayer('{z}/{z},{y},{x}.jpg', {
+        L.tileLayer('{z}/{z},{y},{x}.jpg', {
             minZoom: 0,
             maxZoom: 5,
             tms: true,
             attribution: 'Ma carte interactive'
         }).addTo(map);
 
-        // ASTUCE : Cette fonction calcule automatiquement les limites de vos tuiles 
-        // et cadre la vue exactement au milieu de votre carte au chargement !
-        tileLayer.on('load', function() {
-            // Vous pouvez ajuster les coordonnées des coins ici si nécessaire [MinY, MinX] et [MaxY, MaxX]
-            var bounds = [[0, 0], [-10, 10]]; 
-            map.fitBounds(bounds);
-        });
-        
-        // Sécurité par défaut si l'événement load tarde
-        map.setView 0,1,1 ;
+        // Centrage corrigé directement au milieu de l'île (Coordonnées Y:5, X:5 au zoom 1)
+        map.setView([5, 5], 1);
     </script>
 
 </body>
