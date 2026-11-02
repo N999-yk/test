@@ -43,12 +43,14 @@
             attribution: 'Ma carte interactive'
         }).addTo(map);
 
-        // Puisque la tuile centrale est 0,1,1 au zoom 0, on définit la taille de l'image de base 
-        // (généralement 256x256 ou 512x512 pixels par tuile) pour un centrage parfait et automatique au zoom 0 :
-        var bounds = [[0, 0], [256, 256]]; // Ajustez 256 si vos tuiles font une autre taille
-        
-        // Cette fonction va centrer et ajuster la vue exactement au milieu de l'emprise
-        map.fitBounds(bounds);
+        // Définition de l'espace total de la carte en pixels pour un centrage automatique parfait
+        var southWest = map.unproject([0, 1024], 0);
+        var northEast = map.unproject([1024, 0], 0);
+        var bounds = L.latLngBounds(southWest, northEast);
+
+        // Applique les limites et centre la vue dessus
+        map.setMaxBounds(bounds);
+        map.setView([512, 512], 0);
     </script>
 
 </body>
