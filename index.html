@@ -43,23 +43,15 @@
             attribution: 'Leonida Project'
         }).addTo(map);
 
-        // Limites élargies
-        var southWest = map.unproject([-150, 1174], 0);
-        var northEast = map.unproject([1174, -150], 0);
+        // Définition de l'espace total de la carte en pixels
+        var southWest = map.unproject([0, 1024], 0);
+        var northEast = map.unproject([1024, 0], 0);
         var bounds = L.latLngBounds(southWest, northEast);
+
         map.setMaxBounds(bounds);
         
-        // Centrage de base neutre
-        var center = map.unproject([512, 512], 0);
-        map.setView(center, 0);
-
-        // Forçage absolu du décalage visuel après le chargement complet
-        setTimeout(function() {
-            map.invalidateSize();
-            // Décale la vue de 150 pixels vers la droite pour recentrer l'île de force
-            // (Si l'île bouge enfin, tu pourras ajuster ce '150' à la hausse ou à la baisse)
-            map.panBy([-150, 0], {animate: false});
-        }, 200);
+        // Centrage ajusté plus bas pour placer l'île exactement au milieu de l'écran
+        map.setView([512, 512], 0);
     </script>
 
 </body>
