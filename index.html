@@ -44,14 +44,14 @@
         }).addTo(map);
 
         // Définition de l'espace total de la carte en pixels
-        var southWest = map.unproject([0, 2048], 0);
-        var northEast = map.unproject([2048, 0], 0);
+        var southWest = map.unproject([0, 1024], 0);
+        var northEast = map.unproject([1024, 0], 0);
         var bounds = L.latLngBounds(southWest, northEast);
 
         map.setMaxBounds(bounds);
         
         // Centrage ajusté plus bas pour placer l'île exactement au milieu de l'écran
-        map.setView([1024, 1024], 0);
+        map.setView([512, 512], 0);
     </script>
 
 </body>
