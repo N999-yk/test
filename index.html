@@ -72,7 +72,7 @@
         // ==========================================
         // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
         // ==========================================
-        var logoUrl = 'logo.png'; // Pense à mettre le bon nom de fichier de ton image
+        var logoUrl = 'logo.png'; 
 
         var logoBounds = L.latLngBounds(
             map.unproject([700, 200], 0),   // Coin haut-gauche
@@ -84,25 +84,26 @@
             interactive: false
         });
 
-        // Zone cliquable invisible calée exactement sur le bouton "ABONNEZ-VOUS" en bas à droite du logo
+        // 🎯 RECTANGLE RECENTRÉ SUR LE BOUTON BLEU (remonté sur Y)
         var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1110, 700], 0),  // Coin haut-gauche du bouton
-            map.unproject([1240, 745], 0)   // Coin bas-droit du bouton
+            map.unproject([1050, 580], 0),  // Coin haut-gauche du bouton (remonté de 700 à 580)
+            map.unproject([1200, 630], 0)   // Coin bas-droit du bouton (remonté de 745 à 630)
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
             stroke: false,
-            fillOpacity: 0,
+            fill: false,
             className: 'youtube-btn-link',
             interactive: true
         });
 
         // Redirection vers ta chaîne YouTube au clic sur le bouton
-        youtubeBtnOverlay.on('click', function() {
-            window.open('https://www.youtube.com/@NATIONtmcp', '_blank'); // Remplace par l'URL exacte de ta chaîne si besoin
+        youtubeBtnOverlay.on('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
         });
 
-        // Fonction pour afficher/cacher le logo ET le bouton cliquable selon le niveau de zoom
+        // Fonction pour afficher/cacher le logo ET le bouton selon le niveau de zoom
         function updateLogoVisibility() {
             var currentZoom = map.getZoom();
             if (currentZoom <= 1) {
