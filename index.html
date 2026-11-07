@@ -19,11 +19,16 @@
         }
 
         /* Applique une opacité à 75% (25% de transparence), 
-           permet de cliquer à travers et conserve les proportions d'origine */
+           permet de cliquer à travers le logo global et conserve les proportions */
         .watermark-logo {
             opacity: 0.75;
             pointer-events: none; 
             object-fit: contain !important;
+        }
+
+        /* Style pour le curseur sur le bouton Abonnez-vous */
+        .youtube-btn-link {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -65,11 +70,10 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 LOGO AGRANDI ET LÉGÈREMENT DESCENDU SUR Y (ZOOM 0 & 1)
+        // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
         // ==========================================
-        var logoUrl = 'logo.png'; 
+        var logoUrl = 'logo.jpg'; // Pense à mettre le bon nom de fichier de ton image
 
-        // Logo repositionné (Y passe de 150-700 à 200-750)
         var logoBounds = L.latLngBounds(
             map.unproject([700, 200], 0),   // Coin haut-gauche
             map.unproject([1250, 750], 0)   // Coin bas-droit
@@ -80,16 +84,36 @@
             interactive: false
         });
 
-        // Fonction pour afficher/cacher le logo selon le niveau de zoom
+        // Zone cliquable invisible calée exactement sur le bouton "ABONNEZ-VOUS" en bas à droite du logo
+        var youtubeBtnBounds = L.latLngBounds(
+            map.unproject([1110, 700], 0),  // Coin haut-gauche du bouton
+            map.unproject([1240, 745], 0)   // Coin bas-droit du bouton
+        );
+
+        var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
+            stroke: false,
+            fillOpacity: 0,
+            className: 'youtube-btn-link',
+            interactive: true
+        });
+
+        // Redirection vers ta chaîne YouTube au clic sur le bouton
+        youtubeBtnOverlay.on('click', function() {
+            window.open('https://www.youtube.com/@NATIONtmcp', '_blank'); // Remplace par l'URL exacte de ta chaîne si besoin
+        });
+
+        // Fonction pour afficher/cacher le logo ET le bouton cliquable selon le niveau de zoom
         function updateLogoVisibility() {
             var currentZoom = map.getZoom();
             if (currentZoom <= 1) {
                 if (!map.hasLayer(logoOverlay)) {
                     logoOverlay.addTo(map);
+                    youtubeBtnOverlay.addTo(map);
                 }
             } else {
                 if (map.hasLayer(logoOverlay)) {
                     map.removeLayer(logoOverlay);
+                    map.removeLayer(youtubeBtnOverlay);
                 }
             }
         }
