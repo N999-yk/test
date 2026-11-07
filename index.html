@@ -65,14 +65,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 LOGO AGRANDI, REMONTÉ ET DÉCALÉ À GAUCHE (ZOOM 0 & 1)
+        // 🏴 LOGO AGRANDI ET LÉGÈREMENT DESCENDU SUR Y (ZOOM 0 & 1)
         // ==========================================
         var logoUrl = 'logo.png'; 
 
-        // Logo agrandi (550x550px), remonté sur Y (150-700) et décalé vers la gauche sur X (700-1250)
+        // Logo repositionné (Y passe de 150-700 à 200-750)
         var logoBounds = L.latLngBounds(
-            map.unproject([700, 150], 0),   // Coin haut-gauche
-            map.unproject([1250, 700], 0)   // Coin bas-droit
+            map.unproject([700, 200], 0),   // Coin haut-gauche
+            map.unproject([1250, 750], 0)   // Coin bas-droit
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
