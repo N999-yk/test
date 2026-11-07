@@ -63,14 +63,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 AJOUT DU LOGO (TAILLE ORIGINALE & VISIBLE ZOOM 0 et 1 SEULEMENT)
+        // 🏴 AJOUT DU LOGO (BONNE TAILLE & PROPORTIONS VERTICALES - ZOOM 0 & 1)
         // ==========================================
         var logoUrl = 'logo.png'; 
 
-        // Rectangle bien proportionné (300px de large sur 300px de haut, positionné en haut à droite)
+        // Largeur de 300px (1200 - 900) et Hauteur de 400px (500 - 100) pour garder le logo droit
         var logoBounds = L.latLngBounds(
-            map.unproject([900, 150], 0),   // Coin haut-gauche
-            map.unproject([1200, 450], 0)   // Coin bas-droit
+            map.unproject([900, 100], 0),   // Coin haut-gauche
+            map.unproject([1200, 500], 0)   // Coin bas-droit
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -87,7 +87,7 @@
                 }
             } else {
                 if (map.hasLayer(logoOverlay)) {
-                    map.removeLayer(logoOverlay);
+                    logoOverlay.removeLayer(logoOverlay);
                 }
             }
         }
