@@ -63,14 +63,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 AJOUT DU LOGO (TRANSPARENCE 50% - ZOOM 0 & 1)
+        // 🏴 AJOUT DU LOGO (PLUS PETIT & PLUS HAUT - ZOOM 0 & 1)
         // ==========================================
-        // Assure-toi que ton image s'appelle bien "logo.png" et qu'elle est dans le même dossier
         var logoUrl = 'logo.png'; 
 
+        // Logo plus compact et remonté vers le haut (Y passe de 150/450 à 80/240)
         var logoBounds = L.latLngBounds(
-            map.unproject([900, 150], 0),   // Coin haut-gauche du logo
-            map.unproject([1200, 450], 0)   // Coin bas-droit du logo
+            map.unproject([920, 80], 0),    // Coin haut-gauche (plus haut et à droite)
+            map.unproject([1080, 240], 0)   // Coin bas-droit (taille réduite)
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -87,7 +87,7 @@
                 }
             } else {
                 if (map.hasLayer(logoOverlay)) {
-                    map.removeLayer(logoOverlay);
+                    logoOverlay.removeLayer(logoOverlay);
                 }
             }
         }
