@@ -84,22 +84,22 @@
             interactive: false
         });
 
-        // 🎯 RECTANGLE RECENTRÉ SUR LE BOUTON BLEU (remonté sur Y)
+        // Zone cliquable invisible calée sur le bouton "ABONNEZ-VOUS" en bas à droite
         var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1050, 580], 0),  // Coin haut-gauche du bouton (remonté de 700 à 580)
-            map.unproject([1200, 630], 0)   // Coin bas-droit du bouton (remonté de 745 à 630)
+            map.unproject([1110, 660], 0),  // Coin haut-gauche du bouton
+            map.unproject([1240, 700], 0)   // Coin bas-droit du bouton
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
             stroke: false,
-            fill: false,
+            fill: false,       // Assure-toi que le fond est totalement neutre
             className: 'youtube-btn-link',
             interactive: true
         });
 
         // Redirection vers ta chaîne YouTube au clic sur le bouton
         youtubeBtnOverlay.on('click', function(e) {
-            L.DomEvent.stopPropagation(e);
+            L.DomEvent.stopPropagation(e); // Empêche les clics de traverser sur la map
             window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
         });
 
