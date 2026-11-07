@@ -63,14 +63,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 AJOUT DU LOGO (BONNE TAILLE & PROPORTIONS VERTICALES - ZOOM 0 & 1)
+        // 🏴 AJOUT DU LOGO (TRANSPARENCE 50% - ZOOM 0 & 1)
         // ==========================================
+        // Assure-toi que ton image s'appelle bien "logo.png" et qu'elle est dans le même dossier
         var logoUrl = 'logo.png'; 
 
-        // Largeur de 300px (1200 - 900) et Hauteur de 400px (500 - 100) pour garder le logo droit
         var logoBounds = L.latLngBounds(
-            map.unproject([900, 100], 0),   // Coin haut-gauche
-            map.unproject([1200, 500], 0)   // Coin bas-droit
+            map.unproject([900, 150], 0),   // Coin haut-gauche du logo
+            map.unproject([1200, 450], 0)   // Coin bas-droit du logo
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -78,7 +78,7 @@
             interactive: false
         });
 
-        // Fonction pour afficher/cacher STRICTEMENT aux zooms 0 et 1
+        // Fonction pour afficher/cacher le logo selon le niveau de zoom
         function updateLogoVisibility() {
             var currentZoom = map.getZoom();
             if (currentZoom <= 1) {
@@ -87,14 +87,14 @@
                 }
             } else {
                 if (map.hasLayer(logoOverlay)) {
-                    logoOverlay.removeLayer(logoOverlay);
+                    map.removeLayer(logoOverlay);
                 }
             }
         }
 
-        // Écoute les changements de zoom et applique immédiatement
+        // Écoute les changements de zoom
         map.on('zoomend', updateLogoVisibility);
-        updateLogoVisibility(); 
+        updateLogoVisibility(); // Vérification au chargement
 
         // ==========================================
         // 🔴 CONFIGURATION DES POINTS DE REPÈRE ROUGES
