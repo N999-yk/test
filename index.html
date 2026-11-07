@@ -56,6 +56,20 @@
         // 2. Application du centrage initial
         map.setView(center, 0);
 
+        // ==========================================
+        // 📍 AJOUT DE VOS POINTS DE REPÈRE (MARQUEURS)
+        // ==========================================
+
+        // Premier point de repère (placé au centre par exemple)
+        var marker1 = L.marker(map.unproject([512, 512], 0)).addTo(map);
+        marker1.bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ.");
+
+        // Deuxième point de repère (à adapter selon les pixels de ta map)
+        var marker2 = L.marker(map.unproject([300, 700], 0)).addTo(map);
+        marker2.bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance.");
+
+        // ------------------------------------------
+
         // 3. Empêche les bugs de décalage au premier chargement complet
         setTimeout(function() {
             map.invalidateSize();
