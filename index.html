@@ -18,10 +18,12 @@
             background-color: #2c68a6; 
         }
 
-        /* Applique une transparence de 50% sur le logo et permet de cliquer à travers */
+        /* Applique une transparence de 50%, permet de cliquer à travers 
+           et conserve les proportions de l'image sans déformation */
         .watermark-logo {
             opacity: 0.5;
             pointer-events: none; 
+            object-fit: contain !important;
         }
     </style>
 </head>
@@ -63,14 +65,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 AJOUT DU LOGO (TRANSPARENCE 50% - ZOOM 0 & 1)
+        // 🏴 LOGO AGRANDI ET CENTRÉ À DROITE (AXE Y)
         // ==========================================
-        // Assure-toi que ton image s'appelle bien "logo.png" et qu'elle est dans le même dossier
         var logoUrl = 'logo.png'; 
 
+        // Logo agrandi (450x450px) et centré verticalement sur l'axe Y à droite
         var logoBounds = L.latLngBounds(
-            map.unproject([900, 150], 0),   // Coin haut-gauche du logo
-            map.unproject([1200, 450], 0)   // Coin bas-droit du logo
+            map.unproject([850, 300], 0),   // Coin haut-gauche
+            map.unproject([1300, 750], 0)   // Coin bas-droit
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
