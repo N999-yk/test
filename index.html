@@ -63,14 +63,14 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🏴 AJOUT DU LOGO (PROPORTIONS CORRIGÉES - ZOOM 0 & 1)
+        // 🏴 AJOUT DU LOGO (PROPORTIONS ÉQUILIBRÉES - ZOOM 0 & 1)
         // ==========================================
         var logoUrl = 'logo.png'; 
 
-        // On ajuste les valeurs pour qu'il soit plus haut que large et respecte le logo d'origine
+        // Juste milieu trouvé pour éviter qu'il soit trop étiré ou trop fin
         var logoBounds = L.latLngBounds(
             map.unproject([920, 80], 0),    // Coin haut-gauche
-            map.unproject([1000, 260], 0)   // Coin bas-droit (plus étroit pour éviter l'effet étiré)
+            map.unproject([1060, 280], 0)   // Coin bas-droit
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
