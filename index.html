@@ -57,15 +57,27 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 📍 AJOUT DE VOS POINTS DE REPÈRE (MARQUEURS)
+        // 🔴 CONFIGURATION DE L'ICÔNE ROUGE VIF
+        // ==========================================
+        var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // ==========================================
+        // 📍 AJOUT DES POINTS DE REPÈRE ROUGES
         // ==========================================
 
-        // Premier point de repère (placé au centre par exemple)
-        var marker1 = L.marker(map.unproject([512, 512], 0)).addTo(map);
+        // Premier point de repère (au centre) avec l'icône rouge
+        var marker1 = L.marker(map.unproject([512, 512], 0), {icon: redIcon}).addTo(map);
         marker1.bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ.");
 
-        // Deuxième point de repère (à adapter selon les pixels de ta map)
-        var marker2 = L.marker(map.unproject([300, 700], 0)).addTo(map);
+        // Deuxième point de repère avec l'icône rouge
+        var marker2 = L.marker(map.unproject([300, 700], 0), {icon: redIcon}).addTo(map);
         marker2.bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance.");
 
         // ------------------------------------------
