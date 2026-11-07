@@ -17,6 +17,12 @@
             padding: 0;
             background-color: #2c68a6; 
         }
+
+        /* Applique une transparence de 50% sur le logo et permet de cliquer à travers */
+        .watermark-logo {
+            opacity: 0.5;
+            pointer-events: none; 
+        }
     </style>
 </head>
 <body>
@@ -57,7 +63,41 @@
         map.setView(center, 0);
 
         // ==========================================
-        // 🔴 CONFIGURATION DE L'ICÔNE ROUGE VIF
+        // 🏴 AJOUT DU LOGO (TRANSPARENCE 50% - ZOOM 0 & 1)
+        // ==========================================
+        // Assure-toi que ton image s'appelle bien "logo.png" et qu'elle est dans le même dossier
+        var logoUrl = 'logo.png'; 
+
+        var logoBounds = L.latLngBounds(
+            map.unproject([900, 150], 0),   // Coin haut-gauche du logo
+            map.unproject([1200, 450], 0)   // Coin bas-droit du logo
+        );
+
+        var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
+            className: 'watermark-logo',
+            interactive: false
+        });
+
+        // Fonction pour afficher/cacher le logo selon le niveau de zoom
+        function updateLogoVisibility() {
+            var currentZoom = map.getZoom();
+            if (currentZoom <= 1) {
+                if (!map.hasLayer(logoOverlay)) {
+                    logoOverlay.addTo(map);
+                }
+            } else {
+                if (map.hasLayer(logoOverlay)) {
+                    map.removeLayer(logoOverlay);
+                }
+            }
+        }
+
+        // Écoute les changements de zoom
+        map.on('zoomend', updateLogoVisibility);
+        updateLogoVisibility(); // Vérification au chargement
+
+        // ==========================================
+        // 🔴 CONFIGURATION DES POINTS DE REPÈRE ROUGES
         // ==========================================
         var redIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -68,15 +108,11 @@
             shadowSize: [41, 41]
         });
 
-        // ==========================================
-        // 📍 AJOUT DES POINTS DE REPÈRE ROUGES
-        // ==========================================
-
-        // Premier point de repère (au centre) avec l'icône rouge
+        // Premier point de repère (au centre)
         var marker1 = L.marker(map.unproject([512, 512], 0), {icon: redIcon}).addTo(map);
         marker1.bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ.");
 
-        // Deuxième point de repère avec l'icône rouge
+        // Deuxième point de repère
         var marker2 = L.marker(map.unproject([300, 700], 0), {icon: redIcon}).addTo(map);
         marker2.bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance.");
 
