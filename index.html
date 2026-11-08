@@ -72,7 +72,7 @@
         // ==========================================
         // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
         // ==========================================
-        var logoUrl = 'logo.png'; // Pense à mettre le bon nom de fichier de ton image
+        var logoUrl = 'logo.png'; 
 
         var logoBounds = L.latLngBounds(
             map.unproject([700, 200], 0),   // Coin haut-gauche
@@ -84,25 +84,28 @@
             interactive: false
         });
 
-        // Zone cliquable invisible calée exactement sur le bouton "ABONNEZ-VOUS" en bas à droite du logo
+        // 🔴 ZONE CLIQUABLE RENDUE VISIBLE TEMPORAIREMENT POUR TESTER
         var youtubeBtnBounds = L.latLngBounds(
             map.unproject([1110, 700], 0),  // Coin haut-gauche du bouton
             map.unproject([1240, 745], 0)   // Coin bas-droit du bouton
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
-            stroke: false,
-            fillOpacity: 0,
+            color: '#ff0000',       // Bordure rouge visible
+            weight: 2,
+            fillColor: '#ff0000',   // Intérieur rouge
+            fillOpacity: 0.4,       // Semi-transparent pour voir le bouton en dessous
             className: 'youtube-btn-link',
             interactive: true
         });
 
         // Redirection vers ta chaîne YouTube au clic sur le bouton
-        youtubeBtnOverlay.on('click', function() {
-            window.open('https://www.youtube.com/@NATIONtmcp', '_blank'); // Remplace par l'URL exacte de ta chaîne si besoin
+        youtubeBtnOverlay.on('click', function(e) {
+            L.DomEvent.stopPropagation(e);
+            window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
         });
 
-        // Fonction pour afficher/cacher le logo ET le bouton cliquable selon le niveau de zoom
+        // Fonction pour afficher/cacher le logo ET le bouton selon le niveau de zoom
         function updateLogoVisibility() {
             var currentZoom = map.getZoom();
             if (currentZoom <= 1) {
