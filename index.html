@@ -19,7 +19,7 @@
         }
 
         /* Applique une opacité à 75% (25% de transparence), 
-           permet de cliquer à travers le logo global et conserve les proportions */
+            permet de cliquer à travers le logo global et conserve les proportions */
         .watermark-logo {
             opacity: 0.75;
             pointer-events: none; 
@@ -29,6 +29,17 @@
         /* Style pour le curseur sur le bouton Abonnez-vous */
         .youtube-btn-link {
             cursor: pointer;
+        }
+
+        /* Style pour l'encadré des coordonnées en direct */
+        .coord-box {
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 6px 12px;
+            font-family: monospace;
+            font-size: 13px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -99,7 +110,7 @@
 
         // Redirection vers ta chaîne YouTube au clic sur le bouton
         youtubeBtnOverlay.on('click', function() {
-            window.open('https://www.youtube.com/@NATIONtmcp', '_blank'); // Remplace par l'URL exacte de ta chaîne si besoin
+            window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
         });
 
         // Fonction pour afficher/cacher le logo ET le bouton cliquable selon le niveau de zoom
@@ -121,6 +132,24 @@
         // Écoute les changements de zoom
         map.on('zoomend', updateLogoVisibility);
         updateLogoVisibility(); // Vérification au chargement
+
+        // ==========================================
+        // 📍 OUTIL DE REPÉRAGE DE COORDONNÉES (EN DIRECT)
+        // ==========================================
+        var coordControl = L.control({position: 'bottomleft'});
+        coordControl.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'coord-box');
+            div.innerHTML = 'X: 0 | Y: 0';
+            return div;
+        };
+        coordControl.addTo(map);
+
+        map.on('mousemove', function(e) {
+            var point = map.project(e.latlng, 0);
+            var x = Math.round(point.x);
+            var y = Math.round(point.y);
+            document.querySelector('.coord-box').innerHTML = `X: ${x} | Y: ${y}`;
+        });
 
         // ==========================================
         // 🔴 CONFIGURATION DES POINTS DE REPÈRE ROUGES
