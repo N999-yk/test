@@ -46,14 +46,14 @@
            ========================================== */
         #menu-toggle-btn {
             position: fixed;
-            top: 15px;
+            top: 75px; /* Descendu pour ne pas chevaucher les boutons + et - du zoom Leaflet */
             left: 15px;
             z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
-            border: none;
-            padding: 10px 14px;
-            font-size: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            font-size: 15px;
             border-radius: 6px;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -178,7 +178,7 @@
                 left: 15px;
                 right: 15px;
                 width: auto;
-                top: 70px;
+                top: 125px; /* Ajusté pour s'ouvrir proprement sous le bouton de menu mobile */
                 transform: none;
             }
             .side-menu.closed {
@@ -210,7 +210,7 @@
             </label>
 
             <label class="filter-item">
-                <span>🔵 Objets Cachés</span>
+                <span>🔵 Objets Divers</span>
                 <label class="switch">
                     <input type="checkbox" id="cat-blue" checked onchange="filterMarkers()">
                     <span class="slider"></span>
@@ -218,7 +218,7 @@
             </label>
 
             <label class="filter-item">
-                <span>🔴 Véhicules Cachés</span>
+                <span>🔴 Véhicules</span>
                 <label class="switch">
                     <input type="checkbox" id="cat-red" checked onchange="filterMarkers()">
                     <span class="slider"></span>
@@ -364,7 +364,6 @@
             violet: createIcon('violet')
         };
 
-        // Tableau centralisé de tous nos marqueurs avec leurs catégories et contenus pour la recherche
         var allMarkersData = [
             // Rouges (Véhicules Cachés)
             {
@@ -427,7 +426,6 @@
             }
         ];
 
-        // Ajouter tous les marqueurs sur la carte par défaut
         allMarkersData.forEach(item => item.marker.addTo(map));
 
         // ==========================================
@@ -451,10 +449,8 @@
                 if (item.category === 'orange' && showOrange) categoryVisible = true;
                 if (item.category === 'violet' && showViolet) categoryVisible = true;
 
-                // Vérification de la recherche textuelle
                 var matchesSearch = item.text.toLowerCase().includes(searchquery);
 
-                // Afficher ou masquer selon les deux conditions
                 if (categoryVisible && matchesSearch) {
                     if (!map.hasLayer(item.marker)) {
                         item.marker.addTo(map);
@@ -467,7 +463,6 @@
             });
         }
 
-        // Fonction pour ouvrir/fermer le menu sur mobile
         function toggleMenu() {
             var menu = document.getElementById('sideMenu');
             menu.classList.toggle('closed');
