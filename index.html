@@ -39,135 +39,177 @@
             font-size: 13px;
             border-radius: 4px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px !important;
         }
 
         /* ==========================================
-           🧭 STYLE DU MENU "FILTRES ET RECHERCHE"
+           🧭 STYLE DU MENU LATÉRAL & MOBILE
            ========================================== */
-        .filter-menu {
-            background: rgba(0, 0, 0, 0.85);
+        #menu-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            background: rgba(0, 0, 0, 0.82);
             color: #fff;
-            padding: 15px;
-            font-family: sans-serif;
             border-radius: 8px;
+            padding: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            width: 260px;
+            z-index: 1000;
+            font-family: sans-serif;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .filter-menu h3 {
-            margin: 0 0 12px 0;
+        #menu-container.hidden {
+            transform: translateX(-110%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #menu-container h2 {
             font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 15px;
             text-align: center;
-            color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 8px;
             letter-spacing: 0.5px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
         }
 
         /* Barre de recherche */
-        .search-container {
-            margin-bottom: 15px;
-        }
-
-        .search-container input {
+        #search-input {
             width: 100%;
             padding: 8px 10px;
-            box-sizing: border-box;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 4px;
             color: #fff;
             font-size: 13px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        .search-container input:focus {
-            border-color: #2c68a6;
+        #search-input::placeholder {
+            color: #bbb;
         }
 
-        .search-container input::placeholder {
-            color: #aaa;
+        #search-input:focus {
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* Liste des catégories */
-        .category-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
         .category-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 13px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 10px;
-            border-radius: 4px;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            cursor: pointer;
         }
 
-        .category-item span {
+        .category-item label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            cursor: pointer;
+            width: 100%;
         }
 
-        /* Indicateur de couleur miniature */
-        .color-dot {
+        .category-item input {
+            cursor: pointer;
+            margin-right: 10px;
+            transform: scale(1.1);
+        }
+
+        .dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
             display: inline-block;
+            margin-right: 8px;
         }
 
-        /* Bouton Switch ON / OFF customisé */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 36px;
-            height: 20px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
+        /* Bouton d'ouverture/fermeture mobile */
+        #toggle-menu-btn {
             position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
             cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #555;
-            transition: .3s;
-            border-radius: 20px;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            display: none; /* Affiché dynamiquement ou géré proprement */
         }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #2ecc71;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(16px);
+        /* Adaptation mobile */
+        @media (max-width: 768px) {
+            #menu-container {
+                width: calc(100% - 70px);
+                max-width: 300px;
+                top: 10px;
+                left: 10px;
+            }
+            #toggle-menu-btn {
+                display: block;
+                left: 10px;
+                top: 10px;
+            }
+            /* Si le menu est ouvert sur mobile, on décale un peu le bouton ou on le gère */
         }
     </style>
 </head>
 <body>
+
+    <!-- Bouton pour ouvrir/fermer le menu sur mobile -->
+    <button id="toggle-menu-btn" onclick="toggleMenu()">📂 Menu</button>
+
+    <!-- Menu Encadré Gauche -->
+    <div id="menu-container">
+        <h2>Filtres et Recherche</h2>
+        
+        <!-- Barre de recherche -->
+        <input type="text" id="search-input" placeholder="Rechercher (ex: crocodile)..." onkeyup="filterMarkers()">
+
+        <!-- Liste des catégories avec interrupteurs On/Off -->
+        <div class="category-item">
+            <label>
+                <input type="checkbox" id="cat-green" checked onchange="filterMarkers()">
+                <span class="dot" style="background: #2ecc71;"></span> Faune et Flore
+            </label>
+        </div>
+        <div class="category-item">
+            <label>
+                <input type="checkbox" id="cat-blue" checked onchange="filterMarkers()">
+                <span class="dot" style="background: #3498db;"></span> Objets Cachés
+            </label>
+        </div>
+        <div class="category-item">
+            <label>
+                <input type="checkbox" id="cat-red" checked onchange="filterMarkers()">
+                <span class="dot" style="background: #e74c3c;"></span> Véhicules Cachés
+            </label>
+        </div>
+        <div class="category-item">
+            <label>
+                <input type="checkbox" id="cat-orange" checked onchange="filterMarkers()">
+                <span class="dot" style="background: #e67e22;"></span> Spots et Lieux Cachés
+            </label>
+        </div>
+        <div class="category-item">
+            <label>
+                <input type="checkbox" id="cat-violet" checked onchange="filterMarkers()">
+                <span class="dot" style="background: #9b59b6;"></span> Secrets et Mystères
+            </label>
+        </div>
+    </div>
 
     <!-- Conteneur de la carte -->
     <div id="map"></div>
@@ -207,8 +249,8 @@
         var logoUrl = 'logo.png';
 
         var logoBounds = L.latLngBounds(
-            map.unproject([700, 200], 0),
-            map.unproject([1250, 750], 0)
+            map.unproject([700, 200], 0),   
+            map.unproject([1250, 750], 0)   
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -217,8 +259,8 @@
         });
 
         var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1110, 700], 0),
-            map.unproject([1240, 745], 0)
+            map.unproject([1110, 700], 0),  
+            map.unproject([1240, 745], 0)   
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
@@ -269,11 +311,11 @@
         });
 
         // ==========================================
-        // 🎨 CONFIGURATION DES ICÔNES DE COULEUR
+        // 🔴 CRÉATION DES ICÔNES DE COULEURS
         // ==========================================
         var icons = {
-            green: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            red: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
                 iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
             }),
@@ -282,8 +324,8 @@
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
                 iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
             }),
-            red: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            green: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
                 iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
             }),
@@ -299,182 +341,148 @@
             })
         };
 
-        // ==========================================
-        // 📌 LISTE DE TOUS LES MARQUEURS ET CATÉGORIES
-        // ==========================================
-        // Chaque marqueur possède une catégorie, un titre, une description et son objet Leaflet
-        var markersData = [
-            // --- VERT : Faune et Flore ---
+        // Tableau centralisé de tous nos marqueurs avec leur catégorie et leur texte (pour la recherche)
+        var allMarkers = [
+            // VERT : Faune et Flore
             {
+                latlng: map.unproject([800, 600], 0),
                 category: 'green',
-                title: 'Marais aux Crocodiles',
-                desc: 'Attention aux prédateurs dans les zones humides.',
-                latlng: map.unproject([512, 512], 0)
+                title: "Réserve Naturelle",
+                desc: "Zone forestière protégée et observation de crocodiles sauvages."
             },
             {
+                latlng: map.unproject([150, 900], 0),
                 category: 'green',
-                title: 'Réserve Naturelle de l’Ouest',
-                desc: 'Zone forestière protégée riche en espèces rares.',
-                latlng: map.unproject([150, 900], 0)
+                title: "Domaine Agricole",
+                desc: "Terres cultivables de l'Ouest."
             },
 
-            // --- BLEU : Objets Cachés ---
+            // BLEU : Objets Cachés
             {
+                latlng: map.unproject([200, 400], 0),
                 category: 'blue',
-                title: 'Caisse de Ravitaillement',
-                desc: 'Contient des équipements rares et des munitions.',
-                latlng: map.unproject([200, 400], 0)
+                title: "Zone Portuaire",
+                desc: "Arrivée des marchandises et caisses suspectes."
             },
             {
+                latlng: map.unproject([650, 300], 0),
                 category: 'blue',
-                title: 'Paquet Caché #12',
-                desc: 'Dissimulé derrière les caisses du hangar.',
-                latlng: map.unproject([650, 300], 0)
+                title: "Poste de Sécurité Nord",
+                desc: "Contrôle maritime et équipements."
             },
 
-            // --- ROUGE : Véhicules Cachés ---
+            // ROUGE : Véhicules Cachés
             {
+                latlng: map.unproject([512, 512], 0),
                 category: 'red',
-                title: 'Capitale de Leonida (Véhicule civil)',
-                desc: 'Berline rapide garée au cœur de la nation.',
-                latlng: map.unproject([300, 700], 0)
+                title: "Capitale de Leonida",
+                desc: "Le cœur de la nation et point de départ de véhicules d'exception."
             },
             {
+                latlng: map.unproject([300, 700], 0),
                 category: 'red',
-                title: 'Avant-poste Militaire (Blindé)',
-                desc: 'Véhicule tactique sous haute surveillance.',
-                latlng: map.unproject([800, 250], 0)
+                title: "Avant-poste de l'Est",
+                desc: "Zone militaire sous haute surveillance avec véhicules blindés."
             },
 
-            // --- ORANGE : Spots et Lieux Cachés ---
+            // ORANGE : Spots et Lieux Cachés
             {
+                latlng: map.unproject([450, 200], 0),
                 category: 'orange',
-                title: 'Chantier Industriel Abandonné',
-                desc: 'Idéal pour se planquer en cas de course-poursuite.',
-                latlng: map.unproject([450, 200], 0)
+                title: "Chantier Industriel",
+                desc: "Zone de construction en cours, point d'observation en hauteur."
             },
             {
+                latlng: map.unproject([900, 450], 0),
                 category: 'orange',
-                title: 'Dépôt de Carburant',
-                desc: 'Point stratégique hautement inflammable.',
-                latlng: map.unproject([900, 450], 0)
+                title: "Dépôt de Carburant",
+                desc: "Ravitaillement principal isolé des routes."
             },
 
-            // --- VIOLET : Secrets et Mystères ---
+            // VIOLET : Secrets et Mystères
             {
+                latlng: map.unproject([750, 850], 0),
                 category: 'violet',
-                title: 'Quartier VIP / Casino',
-                desc: 'Lieu de rassemblement nocturne et mystérieux.',
-                latlng: map.unproject([750, 850], 0)
+                title: "Quartier VIP / Casino",
+                desc: "Zone de divertissement nocturne et secrets de bas-fonds."
             },
             {
+                latlng: map.unproject([350, 250], 0),
                 category: 'violet',
-                title: 'Laboratoire Secret',
-                desc: 'Expériences top-secret menées dans la pénombre.',
-                latlng: map.unproject([350, 250], 0)
+                title: "Laboratoire Secret",
+                desc: "Recherches top-secret abandonnées."
             }
         ];
 
-        // Tableau pour stocker les instances Leaflet des marqueurs sur la carte
-        var activeMarkers = [];
+        // Couche de groupe Leaflet pour gérer l'affichage global
+        var markersGroup = L.layerGroup().addTo(map);
 
-        function renderMarkers() {
-            // Nettoie les marqueurs existants
-            activeMarkers.forEach(function(item) {
-                map.removeLayer(item.marker);
-            });
-            activeMarkers = [];
+        // Fonction d'affichage et de filtrage (Catégories + Recherche textuelle)
+        function filterMarkers() {
+            markersGroup.clearLayers(); // On efface tout de la carte
 
-            var searchQuery = document.getElementById('search-input').value.toLowerCase();
+            // Récupération de l'état des cases à cocher
+            var showGreen = document.getElementById('cat-green').checked;
+            var showBlue = document.getElementById('cat-blue').checked;
+            var showRed = document.getElementById('cat-red').checked;
+            var showOrange = document.getElementById('cat-orange').checked;
+            var showViolet = document.getElementById('cat-violet').checked;
 
-            markersData.forEach(function(data) {
-                // Vérifie si le switch de la catégorie est activé (ON)
-                var isCategoryOn = document.getElementById('switch-' + data.category).checked;
+            // Récupération du texte de recherche (mis en minuscules pour ne pas être sensible à la casse)
+            var searchText = document.getElementById('search-input').value.toLowerCase().trim();
 
-                // Vérifie si le texte correspond à la recherche (titre ou description)
-                var matchesSearch = data.title.toLowerCase().includes(searchQuery) || 
-                                    data.desc.toLowerCase().includes(searchQuery);
+            allMarkers.forEach(function(item) {
+                // 1. Vérification du filtre de catégorie (On/Off)
+                var categoryVisible = false;
+                if (item.category === 'green' && showGreen) categoryVisible = true;
+                if (item.category === 'blue' && showBlue) categoryVisible = true;
+                if (item.category === 'red' && showRed) categoryVisible = true;
+                if (item.category === 'orange' && showOrange) categoryVisible = true;
+                if (item.category === 'violet' && showViolet) categoryVisible = true;
 
-                // Le marqueur s'affiche s'il respecte le filtre de catégorie ET la recherche
-                if (isCategoryOn && matchesSearch) {
-                    var marker = L.marker(data.latlng, { icon: icons[data.category] }).addTo(map);
-                    marker.bindPopup(`<b>${data.title}</b><br>${data.desc}`);
-                    activeMarkers.push({ marker: marker, category: data.category });
+                if (!categoryVisible) return; // Si la catégorie est désactivée, on passe au suivant
+
+                // 2. Vérification de la recherche textuelle (titre ou description)
+                if (searchText !== "") {
+                    var matchTitle = item.title.toLowerCase().includes(searchText);
+                    var matchDesc = item.desc.toLowerCase().includes(searchText);
+                    if (!matchTitle && !matchDesc) {
+                        return; // Si le texte ne correspond ni au titre ni à la desc, on masque
+                    }
                 }
+
+                // 3. Si tout est bon, on crée et ajoute le marqueur sur la carte
+                var marker = L.marker(item.latlng, { icon: icons[item.category] });
+                marker.bindPopup(`<b>${item.title}</b><br>${item.desc}`);
+                markersGroup.addLayer(marker);
             });
         }
 
+        // Lancement initial pour afficher tous les marqueurs au chargement
+        filterMarkers();
+
         // ==========================================
-        // 🧭 CRÉATION DU MENU INTERactif (TOPLEFT)
+        // 📱 FONCTION POUR OUVRIR/FERMER LE MENU SUR MOBILE
         // ==========================================
-        var menuControl = L.control({ position: 'topleft' });
+        function toggleMenu() {
+            var menu = document.getElementById('menu-container');
+            var btn = document.getElementById('toggle-menu-btn');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                btn.innerHTML = "📂 Menu";
+            } else {
+                btn.innerHTML = "❌ Fermer";
+            }
+        }
 
-        menuControl.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'filter-menu');
-            div.innerHTML = `
-                <h3>Filtres et Recherche</h3>
-                
-                <div class="search-container">
-                    <input type="text" id="search-input" placeholder="Rechercher (ex: crocodile)..." oninput="renderMarkers()">
-                </div>
-
-                <div class="category-list">
-                    <div class="category-item">
-                        <span><span class="color-dot" style="background-color: #2ecc71;"></span> Faune et Flore</span>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-green" checked onchange="renderMarkers()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="category-item">
-                        <span><span class="color-dot" style="background-color: #3498db;"></span> Objets Cachés</span>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-blue" checked onchange="renderMarkers()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="category-item">
-                        <span><span class="color-dot" style="background-color: #e74c3c;"></span> Véhicules Cachés</span>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-red" checked onchange="renderInstaller || true" checked onchange="renderMarkers()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="category-item">
-                        <span><span class="color-dot" style="background-color: #e67e22;"></span> Spots et Lieux Cachés</span>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-orange" checked onchange="renderMarkers()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="category-item">
-                        <span><span class="color-dot" style="background-color: #9b59b6;"></span> Secrets et Mystères</span>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-violet" checked onchange="renderMarkers()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-            `;
-
-            // Empêche les clics sur le menu de bouger la carte en arrière-plan
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.disableScrollPropagation(div);
-
-            return div;
-        };
-
-        menuControl.addTo(map);
-
-        // Affichage initial des marqueurs au chargement
-        renderMarkers();
+        // Empêche les clics sur le menu de bouger la carte en dessous
+        var menuElement = document.getElementById('menu-container');
+        L.DomEvent.disableClickPropagation(menuElement);
+        L.DomEvent.disableScrollPropagation(menuElement);
 
         // ------------------------------------------
         // Empêche les bugs de décalage au premier chargement complet
+        // ------------------------------------------
         setTimeout(function() {
             map.invalidateSize();
         }, 100);
