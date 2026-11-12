@@ -197,7 +197,7 @@
         <h2>Filtres et Recherche</h2>
         
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Rechercher (ex: crocodile)..." oninput="filterMarkers()">
+            <input type="text" id="searchInput" placeholder="Rechercher" oninput="filterMarkers()">
         </div>
 
         <div class="filter-group">
@@ -429,13 +429,18 @@
         allMarkersData.forEach(item => item.marker.addTo(map));
 
         // ==========================================
-        // 🔍 LOGIQUE DE FILTRAGE ET RECHERCHE
+        // 🔍 LOGIQUE DE FILTRAGE ET RECHERCHE (SANS ACCENT)
         // ==========================================
+        function removeAccents(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
         function filterMarkers() {
-            var searchquery = document.getElementById('searchInput').value.toLowerCase().trim();
+            var rawInput = document.getElementById('searchInput').value;
+            var searchquery = removeAccents(rawInput).toLowerCase().trim();
 
             var showGreen = document.getElementById('cat-green').checked;
-            var showBlue = document.getElementById('cat-blue').checked;
+            var showBlue = document.getElementById('cat-blue'].checked;
             var showRed = document.getElementById('cat-red').checked;
             var showOrange = document.getElementById('cat-orange').checked;
             var showViolet = document.getElementById('cat-violet').checked;
@@ -449,7 +454,9 @@
                 if (item.category === 'orange' && showOrange) categoryVisible = true;
                 if (item.category === 'violet' && showViolet) categoryVisible = true;
 
-                var matchesSearch = item.text.toLowerCase().includes(searchquery);
+                // Nettoyage des accents sur le texte du marqueur avant la comparaison
+                var cleanItemText = removeAccents(item.text).toLowerCase();
+                var matchesSearch = cleanItemText.includes(searchquery);
 
                 if (categoryVisible && matchesSearch) {
                     if (!map.hasLayer(item.marker)) {
