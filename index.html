@@ -83,7 +83,7 @@
         // ==========================================
         // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
         // ==========================================
-        var logoUrl = 'logo.png';
+        var logoUrl = 'logo.png'; // Pense à mettre le bon nom de fichier de ton image
 
         var logoBounds = L.latLngBounds(
             map.unproject([700, 200], 0),   // Coin haut-gauche
@@ -163,13 +163,83 @@
             shadowSize: [41, 41]
         });
 
-        // Premier point de repère (au centre)
         var marker1 = L.marker(map.unproject([512, 512], 0), {icon: redIcon}).addTo(map);
         marker1.bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ.");
 
-        // Deuxième point de repère
         var marker2 = L.marker(map.unproject([300, 700], 0), {icon: redIcon}).addTo(map);
         marker2.bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance.");
+
+        // ==========================================
+        // 🔵 CONFIGURATION DES POINTS DE REPÈRE BLEUS
+        // ==========================================
+        var blueIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        var blueMarker1 = L.marker(map.unproject([200, 400], 0), {icon: blueIcon}).addTo(map);
+        blueMarker1.bindPopup("<b>Zone Portuaire</b><br>Arrivée des marchandises.");
+
+        var blueMarker2 = L.marker(map.unproject([650, 300], 0), {icon: blueIcon}).addTo(map);
+        blueMarker2.bindPopup("<b>Poste de Sécurité Nord</b><br>Contrôle maritime.");
+
+        // ==========================================
+        // 🟢 CONFIGURATION DES POINTS DE REPÈRE VERTS
+        // ==========================================
+        var greenIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        var greenMarker1 = L.marker(map.unproject([800, 600], 0), {icon: greenIcon}).addTo(map);
+        greenMarker1.bindPopup("<b>Réserve Naturelle</b><br>Zone forestière protégée.");
+
+        var greenMarker2 = L.marker(map.unproject([150, 900], 0), {icon: greenIcon}).addTo(map);
+        greenMarker2.bindPopup("<b>Domaine Agricole</b><br>Terres cultivables de l'Ouest.");
+
+        // ==========================================
+        // 🟠 CONFIGURATION DES POINTS DE REPÈRE ORANGES
+        // ==========================================
+        var orangeIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        var orangeMarker1 = L.marker(map.unproject([450, 200], 0), {icon: orangeIcon}).addTo(map);
+        orangeMarker1.bindPopup("<b>Chantier Industriel</b><br>Zone de construction en cours.");
+
+        var orangeMarker2 = L.marker(map.unproject([900, 450], 0), {icon: orangeIcon}).addTo(map);
+        orangeMarker2.bindPopup("<b>Dépôt de Carburant</b><br>Ravitaillement principal.");
+
+        // ==========================================
+        // 🟣 CONFIGURATION DES POINTS DE REPÈRE VIOLETS
+        // ==========================================
+        var violetIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        var violetMarker1 = L.marker(map.unproject([750, 850], 0), {icon: violetIcon}).addTo(map);
+        violetMarker1.bindPopup("<b>Quartier VIP / Casino</b><br>Zone de divertissement nocturne.");
+
+        var violetMarker2 = L.marker(map.unproject([350, 250], 0), {icon: violetIcon}).addTo(map);
+        violetMarker2.bindPopup("<b>Laboratoire Secret</b><br>Recherches top-secret.");
 
         // ------------------------------------------
 
