@@ -1,478 +1,478 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leonida Project NATION</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leonida Project NATION</title>
 
-    <!-- Chargement du design Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chargement du design Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <style>
-        /* Force la carte à prendre tout l'écran avec le fond bleu océan */
-        html, body, #map {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #2c68a6; 
-        }
+    <style>
+        /* Force la carte à prendre tout l'écran avec le fond bleu océan */
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #2c68a6; 
+        }
 
-        /* Applique une opacité à 75% sur le logo */
-        .watermark-logo {
-            opacity: 0.75;
-            pointer-events: none; 
-            object-fit: contain !important;
-        }
+        /* Applique une opacité à 75% sur le logo */
+        .watermark-logo {
+            opacity: 0.75;
+            pointer-events: none; 
+            object-fit: contain !important;
+        }
 
-        /* Style pour le curseur sur le bouton Abonnez-vous */
-        .youtube-btn-link {
-            cursor: pointer;
-        }
+        /* Style pour le curseur sur le bouton Abonnez-vous */
+        .youtube-btn-link {
+            cursor: pointer;
+        }
 
-        /* Style pour l'encadré des coordonnées en direct */
-        .coord-box {
-            background: rgba(0, 0, 0, 0.75);
-            color: #fff;
-            padding: 6px 12px;
-            font-family: monospace;
-            font-size: 13px;
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
+        /* Style pour l'encadré des coordonnées en direct */
+        .coord-box {
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 6px 12px;
+            font-family: monospace;
+            font-size: 13px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
 
-        /* ==========================================
-           🧭 STYLES DU MENU LATÉRAL ET MOBILE
-           ========================================== */
-        #menu-toggle-btn {
-            position: fixed;
-            top: 75px; /* Descendu pour ne pas chevaucher les boutons + et - du zoom Leaflet */
-            left: 15px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 12px;
-            font-size: 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            display: none; /* Affiché via JS si écran mobile/rétréci */
-        }
+        /* ==========================================
+           🧭 STYLES DU MENU LATÉRAL ET MOBILE
+           ========================================== */
+        #menu-toggle-btn {
+            position: fixed;
+            top: 100px; /* Descendu pour ne pas chevaucher les boutons + et - du zoom Leaflet */
+            left: 15px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            display: none; /* Affiché via JS si écran mobile/rétréci */
+        }
 
-        .side-menu {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 280px;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(6px);
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 999;
-            font-family: sans-serif;
-            box-sizing: border-box;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+        .side-menu {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 999;
+            font-family: sans-serif;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
 
-        .side-menu h2 {
-            margin-top: 0;
-            font-size: 18px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 10px;
-            color: #fff;
-        }
+        .side-menu h2 {
+            margin-top: 0;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            color: #fff;
+        }
 
-        .search-container {
-            margin-bottom: 15px;
-        }
+        .search-container {
+            margin-bottom: 15px;
+        }
 
-        .search-container input {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 5px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            box-sizing: border-box;
-            outline: none;
-        }
+        .search-container input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
 
-        .search-container input::placeholder {
-            color: #aaa;
-        }
+        .search-container input::placeholder {
+            color: #aaa;
+        }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-        .filter-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
-        .filter-item span {
-            font-size: 14px;
-        }
+        .filter-item span {
+            font-size: 14px;
+        }
 
-        /* Style custom des interrupteurs ON/OFF */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
+        /* Style custom des interrupteurs ON/OFF */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .3s;
-            border-radius: 20px;
-        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 20px;
+        }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
 
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
 
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
 
-        /* Gestion de l'affichage mobile */
-        @media (max-width: 768px) {
-            #menu-toggle-btn {
-                display: block;
-            }
-            .side-menu {
-                left: 15px;
-                right: 15px;
-                width: auto;
-                top: 125px; /* Ajusté pour s'ouvrir proprement sous le bouton de menu mobile */
-                transform: none;
-            }
-            .side-menu.closed {
-                display: none;
-            }
-        }
-    </style>
+        /* Gestion de l'affichage mobile */
+        @media (max-width: 768px) {
+            #menu-toggle-btn {
+                display: block;
+            }
+            .side-menu {
+                left: 15px;
+                right: 15px;
+                width: auto;
+                top: 125px; /* Ajusté pour s'ouvrir proprement sous le bouton de menu mobile */
+                transform: none;
+            }
+            .side-menu.closed {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Bouton mobile pour ouvrir/fermer le menu -->
-    <button id="menu-toggle-btn" onclick="toggleMenu()">☰ Menu</button>
+    <!-- Bouton mobile pour ouvrir/fermer le menu -->
+    <button id="menu-toggle-btn" onclick="toggleMenu()">☰ Menu</button>
 
-    <!-- Menu Latéral -->
-    <div class="side-menu" id="sideMenu">
-        <h2>Filtres et Recherche</h2>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Rechercher" oninput="filterMarkers()">
-        </div>
+    <!-- Menu Latéral -->
+    <div class="side-menu" id="sideMenu">
+        <h2>Filtres et Recherche</h2>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Rechercher" oninput="filterMarkers()">
+        </div>
 
-        <div class="filter-group">
-            <label class="filter-item">
-                <span>🟢 Faune et Flore</span>
-                <label class="switch">
-                    <input type="checkbox" id="cat-green" checked onchange="filterMarkers()">
-                    <span class="slider"></span>
-                </label>
-            </label>
+        <div class="filter-group">
+            <label class="filter-item">
+                <span>🟢 Faune et Flore</span>
+                <label class="switch">
+                    <input type="checkbox" id="cat-green" checked onchange="filterMarkers()">
+                    <span class="slider"></span>
+                </label>
+            </label>
 
-            <label class="filter-item">
-                <span>🔵 Objets Divers</span>
-                <label class="switch">
-                    <input type="checkbox" id="cat-blue" checked onchange="filterMarkers()">
-                    <span class="slider"></span>
-                </label>
-            </label>
+            <label class="filter-item">
+                <span>🔵 Objets Divers</span>
+                <label class="switch">
+                    <input type="checkbox" id="cat-blue" checked onchange="filterMarkers()">
+                    <span class="slider"></span>
+                </label>
+            </label>
 
-            <label class="filter-item">
-                <span>🔴 Véhicules</span>
-                <label class="switch">
-                    <input type="checkbox" id="cat-red" checked onchange="filterMarkers()">
-                    <span class="slider"></span>
-                </label>
-            </label>
+            <label class="filter-item">
+                <span>🔴 Véhicules</span>
+                <label class="switch">
+                    <input type="checkbox" id="cat-red" checked onchange="filterMarkers()">
+                    <span class="slider"></span>
+                </label>
+            </label>
 
-            <label class="filter-item">
-                <span>🟠 Spots et Lieux Cachés</span>
-                <label class="switch">
-                    <input type="checkbox" id="cat-orange" checked onchange="filterMarkers()">
-                    <span class="slider"></span>
-                </label>
-            </label>
+            <label class="filter-item">
+                <span>🟠 Spots et Lieux Cachés</span>
+                <label class="switch">
+                    <input type="checkbox" id="cat-orange" checked onchange="filterMarkers()">
+                    <span class="slider"></span>
+                </label>
+            </label>
 
-            <label class="filter-item">
-                <span>🟣 Secrets et Mystères</span>
-                <label class="switch">
-                    <input type="checkbox" id="cat-violet" checked onchange="filterMarkers()">
-                    <span class="slider"></span>
-                </label>
-            </label>
-        </div>
-    </div>
+            <label class="filter-item">
+                <span>🟣 Secrets et Mystères</span>
+                <label class="switch">
+                    <input type="checkbox" id="cat-violet" checked onchange="filterMarkers()">
+                    <span class="slider"></span>
+                </label>
+            </label>
+        </div>
+    </div>
 
-    <!-- Conteneur de la carte -->
-    <div id="map"></div>
+    <!-- Conteneur de la carte -->
+    <div id="map"></div>
 
-    <!-- Chargement du moteur Leaflet -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chargement du moteur Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        // Initialisation de la carte avec les niveaux de zoom et le système à plat
-        var map = L.map('map', {
-            crs: L.CRS.Simple,
-            minZoom: 0,
-            maxZoom: 5
-        });
+    <script>
+        // Initialisation de la carte avec les niveaux de zoom et le système à plat
+        var map = L.map('map', {
+            crs: L.CRS.Simple,
+            minZoom: 0,
+            maxZoom: 5
+        });
 
-        // Chargement des tuiles JPG avec l'ordre inversé et le paramètre tms
-        L.tileLayer('{z}/{z},{y},{x}.jpg', {
-            minZoom: 0,
-            maxZoom: 5,
-            tms: true,
-            attribution: 'Leonida Project NATION'
-        }).addTo(map);
+        // Chargement des tuiles JPG avec l'ordre inversé et le paramètre tms
+        L.tileLayer('{z}/{z},{y},{x}.jpg', {
+            minZoom: 0,
+            maxZoom: 5,
+            tms: true,
+            attribution: 'Leonida Project NATION'
+        }).addTo(map);
 
-        // Définition de l'espace total de la carte en pixels
-        var southWest = map.unproject([-400, 1124], 0);
-        var northEast = map.unproject([1424, -100], 0);
-        var bounds = L.latLngBounds(southWest, northEast);
+        // Définition de l'espace total de la carte en pixels
+        var southWest = map.unproject([-400, 1124], 0);
+        var northEast = map.unproject([1424, -100], 0);
+        var bounds = L.latLngBounds(southWest, northEast);
 
-        map.setMaxBounds(bounds);
-        
-        var center = map.unproject([512, 512], 0);
-        map.setView(center, 0);
+        map.setMaxBounds(bounds);
+        
+        var center = map.unproject([512, 512], 0);
+        map.setView(center, 0);
 
-        // ==========================================
-        // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
-        // ==========================================
-        var logoUrl = 'logo.png'; 
+        // ==========================================
+        // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
+        // ==========================================
+        var logoUrl = 'logo.png'; 
 
-        var logoBounds = L.latLngBounds(
-            map.unproject([700, 200], 0),   
-            map.unproject([1250, 750], 0)   
-        );
+        var logoBounds = L.latLngBounds(
+            map.unproject([700, 200], 0),   
+            map.unproject([1250, 750], 0)   
+        );
 
-        var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
-            className: 'watermark-logo',
-            interactive: false
-        });
+        var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
+            className: 'watermark-logo',
+            interactive: false
+        });
 
-        var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1110, 700], 0),  
-            map.unproject([1240, 745], 0)   
-        );
+        var youtubeBtnBounds = L.latLngBounds(
+            map.unproject([1110, 700], 0),  
+            map.unproject([1240, 745], 0)   
+        );
 
-        var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
-            stroke: false,
-            fillOpacity: 0,
-            className: 'youtube-btn-link',
-            interactive: true
-        });
+        var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
+            stroke: false,
+            fillOpacity: 0,
+            className: 'youtube-btn-link',
+            interactive: true
+        });
 
-        youtubeBtnOverlay.on('click', function() {
-            window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
-        });
+        youtubeBtnOverlay.on('click', function() {
+            window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
+        });
 
-        function updateLogoVisibility() {
-            var currentZoom = map.getZoom();
-            if (currentZoom <= 1) {
-                if (!map.hasLayer(logoOverlay)) {
-                    logoOverlay.addTo(map);
-                    youtubeBtnOverlay.addTo(map);
-                }
-            } else {
-                if (map.hasLayer(logoOverlay)) {
-                    map.removeLayer(logoOverlay);
-                    map.removeLayer(youtubeBtnOverlay);
-                }
-            }
-        }
+        function updateLogoVisibility() {
+            var currentZoom = map.getZoom();
+            if (currentZoom <= 1) {
+                if (!map.hasLayer(logoOverlay)) {
+                    logoOverlay.addTo(map);
+                    youtubeBtnOverlay.addTo(map);
+                }
+            } else {
+                if (map.hasLayer(logoOverlay)) {
+                    map.removeLayer(logoOverlay);
+                    map.removeLayer(youtubeBtnOverlay);
+                }
+            }
+        }
 
-        map.on('zoomend', updateLogoVisibility);
-        updateLogoVisibility(); 
+        map.on('zoomend', updateLogoVisibility);
+        updateLogoVisibility(); 
 
-        // ==========================================
-        // 📍 OUTIL DE REPÉRAGE DE COORDONNÉES (EN DIRECT)
-        // ==========================================
-        var coordControl = L.control({position: 'bottomleft'});
-        coordControl.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'coord-box');
-            div.innerHTML = 'X: 0 | Y: 0';
-            return div;
-        };
-        coordControl.addTo(map);
+        // ==========================================
+        // 📍 OUTIL DE REPÉRAGE DE COORDONNÉES (EN DIRECT)
+        // ==========================================
+        var coordControl = L.control({position: 'bottomleft'});
+        coordControl.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'coord-box');
+            div.innerHTML = 'X: 0 | Y: 0';
+            return div;
+        };
+        coordControl.addTo(map);
 
-        map.on('mousemove', function(e) {
-            var point = map.project(e.latlng, 0);
-            var x = Math.round(point.x);
-            var y = Math.round(point.y);
-            document.querySelector('.coord-box').innerHTML = `X: ${x} | Y: ${y}`;
-        });
+        map.on('mousemove', function(e) {
+            var point = map.project(e.latlng, 0);
+            var x = Math.round(point.x);
+            var y = Math.round(point.y);
+            document.querySelector('.coord-box').innerHTML = `X: ${x} | Y: ${y}`;
+        });
 
-        // ==========================================
-        // 🔴 CONFIGURATION DES ICÔNES DE COULEURS
-        // ==========================================
-        function createIcon(colorName) {
-            return new L.Icon({
-                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${colorName}.png`,
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
-        }
+        // ==========================================
+        // 🔴 CONFIGURATION DES ICÔNES DE COULEURS
+        // ==========================================
+        function createIcon(colorName) {
+            return new L.Icon({
+                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${colorName}.png`,
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+        }
 
-        var icons = {
-            red: createIcon('red'),
-            blue: createIcon('blue'),
-            green: createIcon('green'),
-            orange: createIcon('orange'),
-            violet: createIcon('violet')
-        };
+        var icons = {
+            red: createIcon('red'),
+            blue: createIcon('blue'),
+            green: createIcon('green'),
+            orange: createIcon('orange'),
+            violet: createIcon('violet')
+        };
 
-        var allMarkersData = [
-            // Rouges (Véhicules Cachés)
-            {
-                marker: L.marker(map.unproject([512, 512], 0), {icon: icons.red}).bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ."),
-                category: 'red',
-                text: "Capitale de Leonida Le cœur de la nation et point de départ"
-            },
-            {
-                marker: L.marker(map.unproject([300, 700], 0), {icon: icons.red}).bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance avec un vieux camion abandonné."),
-                category: 'red',
-                text: "Avant-poste de l'Est Zone militaire sous haute surveillance camion"
-            },
+        var allMarkersData = [
+            // Rouges (Véhicules Cachés)
+            {
+                marker: L.marker(map.unproject([512, 512], 0), {icon: icons.red}).bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ."),
+                category: 'red',
+                text: "Capitale de Leonida Le cœur de la nation et point de départ"
+            },
+            {
+                marker: L.marker(map.unproject([300, 700], 0), {icon: icons.red}).bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance avec un vieux camion abandonné."),
+                category: 'red',
+                text: "Avant-poste de l'Est Zone militaire sous haute surveillance camion"
+            },
 
-            // Bleus (Objets Cachés)
-            {
-                marker: L.marker(map.unproject([200, 400], 0), {icon: icons.blue}).bindPopup("<b>Zone Portuaire</b><br>Arrivée des marchandises et caisses mystérieuses."),
-                category: 'blue',
-                text: "Zone Portuaire Arrivée des marchandises caisses mystérieuses"
-            },
-            {
-                marker: L.marker(map.unproject([650, 300], 0), {icon: icons.blue}).bindPopup("<b>Poste de Sécurité Nord</b><br>Clé magnétique cachée dans le tiroir."),
-                category: 'blue',
-                text: "Poste de Sécurité Nord Clé magnétique cachée tiroir"
-            },
+            // Bleus (Objets Cachés)
+            {
+                marker: L.marker(map.unproject([200, 400], 0), {icon: icons.blue}).bindPopup("<b>Zone Portuaire</b><br>Arrivée des marchandises et caisses mystérieuses."),
+                category: 'blue',
+                text: "Zone Portuaire Arrivée des marchandises caisses mystérieuses"
+            },
+            {
+                marker: L.marker(map.unproject([650, 300], 0), {icon: icons.blue}).bindPopup("<b>Poste de Sécurité Nord</b><br>Clé magnétique cachée dans le tiroir."),
+                category: 'blue',
+                text: "Poste de Sécurité Nord Clé magnétique cachée tiroir"
+            },
 
-            // Verts (Faune et Flore)
-            {
-                marker: L.marker(map.unproject([800, 600], 0), {icon: icons.green}).bindPopup("<b>Réserve Naturelle</b><br>Attention aux attaques de crocodile dans les marais."),
-                category: 'green',
-                text: "Réserve Naturelle Attention attaques crocodile marais"
-            },
-            {
-                marker: L.marker(map.unproject([150, 900], 0), {icon: icons.green}).bindPopup("<b>Domaine Agricole</b><br>Terres cultivables et plantes rares."),
-                category: 'green',
-                text: "Domaine Agricole Terres cultivables plantes rares"
-            },
+            // Verts (Faune et Flore)
+            {
+                marker: L.marker(map.unproject([800, 600], 0), {icon: icons.green}).bindPopup("<b>Réserve Naturelle</b><br>Attention aux attaques de crocodile dans les marais."),
+                category: 'green',
+                text: "Réserve Naturelle Attention attaques crocodile marais"
+            },
+            {
+                marker: L.marker(map.unproject([150, 900], 0), {icon: icons.green}).bindPopup("<b>Domaine Agricole</b><br>Terres cultivables et plantes rares."),
+                category: 'green',
+                text: "Domaine Agricole Terres cultivables plantes rares"
+            },
 
-            // Oranges (Spots et Lieux Cachés)
-            {
-                marker: L.marker(map.unproject([450, 200], 0), {icon: icons.orange}).bindPopup("<b>Chantier Industriel</b><br>Superbe spot de saut en hauteur."),
-                category: 'orange',
-                text: "Chantier Industriel Superbe spot saut hauteur"
-            },
-            {
-                marker: L.marker(map.unproject([900, 450], 0), {icon: icons.orange}).bindPopup("<b>Dépôt de Carburant</b><br>Ravitaillement principal et planque."),
-                category: 'orange',
-                text: "Dépôt de Carburant Ravitaillement principal planque"
-            },
+            // Oranges (Spots et Lieux Cachés)
+            {
+                marker: L.marker(map.unproject([450, 200], 0), {icon: icons.orange}).bindPopup("<b>Chantier Industriel</b><br>Superbe spot de saut en hauteur."),
+                category: 'orange',
+                text: "Chantier Industriel Superbe spot saut hauteur"
+            },
+            {
+                marker: L.marker(map.unproject([900, 450], 0), {icon: icons.orange}).bindPopup("<b>Dépôt de Carburant</b><br>Ravitaillement principal et planque."),
+                category: 'orange',
+                text: "Dépôt de Carburant Ravitaillement principal planque"
+            },
 
-            // Violets (Secrets et Mystères)
-            {
-                marker: L.marker(map.unproject([750, 850], 0), {icon: icons.violet}).bindPopup("<b>Quartier VIP / Casino</b><br>Easter egg du coffre-fort secret."),
-                category: 'violet',
-                text: "Quartier VIP Casino Easter egg coffre-fort secret"
-            },
-            {
-                marker: L.marker(map.unproject([350, 250], 0), {icon: icons.violet}).bindPopup("<b>Laboratoire Secret</b><br>Recherches top-secret sur des anomalies."),
-                category: 'violet',
-                text: "Laboratoire Secret Recherches top-secret anomalies"
-            }
-        ];
+            // Violets (Secrets et Mystères)
+            {
+                marker: L.marker(map.unproject([750, 850], 0), {icon: icons.violet}).bindPopup("<b>Quartier VIP / Casino</b><br>Easter egg du coffre-fort secret."),
+                category: 'violet',
+                text: "Quartier VIP Casino Easter egg coffre-fort secret"
+            },
+            {
+                marker: L.marker(map.unproject([350, 250], 0), {icon: icons.violet}).bindPopup("<b>Laboratoire Secret</b><br>Recherches top-secret sur des anomalies."),
+                category: 'violet',
+                text: "Laboratoire Secret Recherches top-secret anomalies"
+            }
+        ];
 
-        allMarkersData.forEach(item => item.marker.addTo(map));
+        allMarkersData.forEach(item => item.marker.addTo(map));
 
-        // ==========================================
-        // 🔍 LOGIQUE DE FILTRAGE ET RECHERCHE
-        // ==========================================
-        function filterMarkers() {
-            var searchquery = document.getElementById('searchInput').value.toLowerCase().trim();
+        // ==========================================
+        // 🔍 LOGIQUE DE FILTRAGE ET RECHERCHE
+        // ==========================================
+        function filterMarkers() {
+            var searchquery = document.getElementById('searchInput').value.toLowerCase().trim();
 
-            var showGreen = document.getElementById('cat-green').checked;
-            var showBlue = document.getElementById('cat-blue').checked;
-            var showRed = document.getElementById('cat-red').checked;
-            var showOrange = document.getElementById('cat-orange').checked;
-            var showViolet = document.getElementById('cat-violet').checked;
+            var showGreen = document.getElementById('cat-green').checked;
+            var showBlue = document.getElementById('cat-blue').checked;
+            var showRed = document.getElementById('cat-red').checked;
+            var showOrange = document.getElementById('cat-orange').checked;
+            var showViolet = document.getElementById('cat-violet').checked;
 
-            allMarkersData.forEach(item => {
-                var categoryVisible = false;
+            allMarkersData.forEach(item => {
+                var categoryVisible = false;
 
-                if (item.category === 'green' && showGreen) categoryVisible = true;
-                if (item.category === 'blue' && showBlue) categoryVisible = true;
-                if (item.category === 'red' && showRed) categoryVisible = true;
-                if (item.category === 'orange' && showOrange) categoryVisible = true;
-                if (item.category === 'violet' && showViolet) categoryVisible = true;
+                if (item.category === 'green' && showGreen) categoryVisible = true;
+                if (item.category === 'blue' && showBlue) categoryVisible = true;
+                if (item.category === 'red' && showRed) categoryVisible = true;
+                if (item.category === 'orange' && showOrange) categoryVisible = true;
+                if (item.category === 'violet' && showViolet) categoryVisible = true;
 
-                var matchesSearch = item.text.toLowerCase().includes(searchquery);
+                var matchesSearch = item.text.toLowerCase().includes(searchquery);
 
-                if (categoryVisible && matchesSearch) {
-                    if (!map.hasLayer(item.marker)) {
-                        item.marker.addTo(map);
-                    }
-                } else {
-                    if (map.hasLayer(item.marker)) {
-                        map.removeLayer(item.marker);
-                    }
-                }
-            });
-        }
+                if (categoryVisible && matchesSearch) {
+                    if (!map.hasLayer(item.marker)) {
+                        item.marker.addTo(map);
+                    }
+                } else {
+                    if (map.hasLayer(item.marker)) {
+                        map.removeLayer(item.marker);
+                    }
+                }
+            });
+        }
 
-        function toggleMenu() {
-            var menu = document.getElementById('sideMenu');
-            menu.classList.toggle('closed');
-        }
+        function toggleMenu() {
+            var menu = document.getElementById('sideMenu');
+            menu.classList.toggle('closed');
+        }
 
-        // ------------------------------------------
-        setTimeout(function() {
-            map.invalidateSize();
-        }, 100);
-    </script>
+        // ------------------------------------------
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 100);
+    </script>
 
 </body>
 </html>
