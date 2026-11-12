@@ -19,7 +19,7 @@
         }
 
         /* Applique une opacité à 75% (25% de transparence), 
-            permet de cliquer à travers le logo global et conserve les proportions */
+            permet de cliquer à través le logo global et conserve les proportions */
         .watermark-logo {
             opacity: 0.75;
             pointer-events: none; 
@@ -41,12 +41,145 @@
             border-radius: 4px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
+
+        /* ==========================================
+           🧭 STYLE DU MENU LATÉRAL GAUCHE
+           ========================================== */
+        .map-sidebar {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 320px;
+            max-height: 80vh;
+            background: rgba(18, 18, 18, 0.90);
+            color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            z-index: 1000;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .map-sidebar h2 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #e5e5e5;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        /* Barre de recherche */
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .search-box:focus {
+            border-color: #2c68a6;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Catégories et éléments */
+        .category-section {
+            margin-bottom: 12px;
+        }
+        .category-title {
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .marker-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 5px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .marker-item span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        /* Style de l'interrupteur On/Off */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #555;
+            transition: .3s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2ecc71;
+        }
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
     </style>
 </head>
 <body>
 
     <!-- Conteneur de la carte -->
     <div id="map"></div>
+
+    <!-- Menu Latéral Interactif -->
+    <div id="sidebar-menu" class="map-sidebar">
+        <h2>🗺️ Filtres & Repères</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="Rechercher (ex: crocodile)...">
+        <div id="menuCategories"></div>
+    </div>
 
     <!-- Chargement du moteur Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -80,14 +213,19 @@
         // 2. Application du centrage initial
         map.setView(center, 0);
 
+        // Empêche les clics/scrolls du menu de bouger la carte
+        var sidebar = document.getElementById('sidebar-menu');
+        L.DomEvent.disableClickPropagation(sidebar);
+        L.DomEvent.disableScrollPropagation(sidebar);
+
         // ==========================================
         // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
         // ==========================================
-        var logoUrl = 'logo.png'; // Pense à mettre le bon nom de fichier de ton image
+        var logoUrl = 'logo.png';
 
         var logoBounds = L.latLngBounds(
-            map.unproject([700, 200], 0),   // Coin haut-gauche
-            map.unproject([1250, 750], 0)   // Coin bas-droit
+            map.unproject([700, 200], 0),   
+            map.unproject([1250, 750], 0)   
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -95,10 +233,9 @@
             interactive: false
         });
 
-        // Zone cliquable invisible calée exactement sur le bouton "ABONNEZ-VOUS" en bas à droite du logo
         var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1110, 700], 0),  // Coin haut-gauche du bouton
-            map.unproject([1240, 745], 0)   // Coin bas-droit du bouton
+            map.unproject([1110, 700], 0),  
+            map.unproject([1240, 745], 0)   
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
@@ -108,12 +245,10 @@
             interactive: true
         });
 
-        // Redirection vers ta chaîne YouTube au clic sur le bouton
         youtubeBtnOverlay.on('click', function() {
             window.open('https://www.youtube.com/@NATIONtmcp', '_blank');
         });
 
-        // Fonction pour afficher/cacher le logo ET le bouton cliquable selon le niveau de zoom
         function updateLogoVisibility() {
             var currentZoom = map.getZoom();
             if (currentZoom <= 1) {
@@ -129,9 +264,8 @@
             }
         }
 
-        // Écoute les changements de zoom
         map.on('zoomend', updateLogoVisibility);
-        updateLogoVisibility(); // Vérification au chargement
+        updateLogoVisibility();
 
         // ==========================================
         // 📍 OUTIL DE REPÉRAGE DE COORDONNÉES (EN DIRECT)
@@ -152,94 +286,152 @@
         });
 
         // ==========================================
-        // 🔴 CONFIGURATION DES POINTS DE REPÈRE ROUGES
+        // 🎨 CONFIGURATION DES ICÔNES ET CATÉGORIES
         // ==========================================
-        var redIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
+        var icons = {
+            green: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            }),
+            blue: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            }),
+            red: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            }),
+            orange: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            }),
+            violet: new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            })
+        };
+
+        // Données structurées des catégories et de leurs repères
+        var categoriesData = [
+            {
+                key: "green",
+                title: "Faune et Flore",
+                hex: "#2ecc71",
+                items: [
+                    { name: "Réserve Naturelle", desc: "Zone forestière protégée avec habitat de crocodile.", coords: [800, 600] },
+                    { name: "Domaine Agricole", desc: "Terres cultivables de l'Ouest.", coords: [150, 900] }
+                ]
+            },
+            {
+                key: "blue",
+                title: "Objets Cachés",
+                hex: "#3498db",
+                items: [
+                    { name: "Zone Portuaire", desc: "Arrivée des marchandises.", coords: [200, 400] },
+                    { name: "Poste de Sécurité Nord", desc: "Contrôle maritime.", coords: [650, 300] }
+                ]
+            },
+            {
+                key: "red",
+                title: "Véhicules Cachés",
+                hex: "#e74c3c",
+                items: [
+                    { name: "Capitale de Leonida", desc: "Le cœur de la nation et point de départ.", coords: [512, 512] },
+                    { name: "Avant-poste de l'Est", desc: "Zone militaire sous haute surveillance.", coords: [300, 700] }
+                ]
+            },
+            {
+                key: "orange",
+                title: "Spots et Lieux Cachés",
+                hex: "#e67e22",
+                items: [
+                    { name: "Chantier Industriel", desc: "Zone de construction en cours.", coords: [450, 200] },
+                    { name: "Dépôt de Carburant", desc: "Ravitaillement principal.", coords: [900, 450] }
+                ]
+            },
+            {
+                key: "violet",
+                title: "Secrets et Mystères",
+                hex: "#9b59b6",
+                items: [
+                    { name: "Quartier VIP / Casino", desc: "Zone de divertissement nocturne.", coords: [750, 850] },
+                    { name: "Laboratoire Secret", desc: "Recherches top-secret.", coords: [350, 250] }
+                ]
+            }
+        ];
+
+        // Génération automatique des marqueurs sur la carte et construction du menu
+        var menuContainer = document.getElementById('menuCategories');
+        
+        categoriesData.forEach(function(cat, catIndex) {
+            // Création de la section de catégorie dans le menu
+            var sectionDiv = document.createElement('div');
+            sectionDiv.className = 'category-section';
+            sectionDiv.innerHTML = `
+                <div class="category-title">
+                    <span class="dot" style="background-color: ${cat.hex};"></span>
+                    ${cat.title}
+                </div>
+            `;
+
+            cat.items.forEach(function(item, itemIndex) {
+                // Création du marqueur Leaflet
+                var marker = L.marker(map.unproject(item.coords, 0), { icon: icons[cat.key] }).addTo(map);
+                marker.bindPopup(`<b>${item.name}</b><br>${item.desc}`);
+                
+                // On stocke la référence du marker et ses infos textuelles pour la recherche
+                item.markerInstance = marker;
+                item.searchText = (item.name + " " + item.desc).toLowerCase();
+
+                // Création de la ligne dans le menu pour ce repère
+                var itemDiv = document.createElement('div');
+                itemDiv.className = 'marker-item';
+                itemDiv.setAttribute('data-search', item.searchText);
+                itemDiv.innerHTML = `
+                    <span>${item.name}</span>
+                    <label class="switch">
+                        <input type="checkbox" checked data-cat="${catIndex}" data-item="${itemIndex}">
+                        <span class="slider"></span>
+                    </label>
+                `;
+
+                // Événement sur l'interrupteur On/Off
+                var checkbox = itemDiv.querySelector('input');
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        map.addLayer(item.markerInstance);
+                    } else {
+                        map.removeLayer(item.markerInstance);
+                    }
+                });
+
+                sectionDiv.appendChild(itemDiv);
+            });
+
+            menuContainer.appendChild(sectionDiv);
         });
 
-        var marker1 = L.marker(map.unproject([512, 512], 0), {icon: redIcon}).addTo(map);
-        marker1.bindPopup("<b>Capitale de Leonida</b><br>Le cœur de la nation et point de départ.");
-
-        var marker2 = L.marker(map.unproject([300, 700], 0), {icon: redIcon}).addTo(map);
-        marker2.bindPopup("<b>Avant-poste de l'Est</b><br>Zone militaire sous haute surveillance.");
-
         // ==========================================
-        // 🔵 CONFIGURATION DES POINTS DE REPÈRE BLEUS
+        // 🔍 FILTRE DE RECHERCHE DYNAMIQUE
         // ==========================================
-        var blueIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
+        document.getElementById('searchInput').addEventListener('input', function() {
+            var query = this.value.toLowerCase().trim();
+            var markerItems = document.querySelectorAll('.marker-item');
+
+            markerItems.forEach(function(el) {
+                var text = el.getAttribute('data-search');
+                if (text.includes(query)) {
+                    el.style.display = 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
         });
-
-        var blueMarker1 = L.marker(map.unproject([200, 400], 0), {icon: blueIcon}).addTo(map);
-        blueMarker1.bindPopup("<b>Zone Portuaire</b><br>Arrivée des marchandises.");
-
-        var blueMarker2 = L.marker(map.unproject([650, 300], 0), {icon: blueIcon}).addTo(map);
-        blueMarker2.bindPopup("<b>Poste de Sécurité Nord</b><br>Contrôle maritime.");
-
-        // ==========================================
-        // 🟢 CONFIGURATION DES POINTS DE REPÈRE VERTS
-        // ==========================================
-        var greenIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
-        var greenMarker1 = L.marker(map.unproject([800, 600], 0), {icon: greenIcon}).addTo(map);
-        greenMarker1.bindPopup("<b>Réserve Naturelle</b><br>Zone forestière protégée.");
-
-        var greenMarker2 = L.marker(map.unproject([150, 900], 0), {icon: greenIcon}).addTo(map);
-        greenMarker2.bindPopup("<b>Domaine Agricole</b><br>Terres cultivables de l'Ouest.");
-
-        // ==========================================
-        // 🟠 CONFIGURATION DES POINTS DE REPÈRE ORANGES
-        // ==========================================
-        var orangeIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
-        var orangeMarker1 = L.marker(map.unproject([450, 200], 0), {icon: orangeIcon}).addTo(map);
-        orangeMarker1.bindPopup("<b>Chantier Industriel</b><br>Zone de construction en cours.");
-
-        var orangeMarker2 = L.marker(map.unproject([900, 450], 0), {icon: orangeIcon}).addTo(map);
-        orangeMarker2.bindPopup("<b>Dépôt de Carburant</b><br>Ravitaillement principal.");
-
-        // ==========================================
-        // 🟣 CONFIGURATION DES POINTS DE REPÈRE VIOLETS
-        // ==========================================
-        var violetIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
-        var violetMarker1 = L.marker(map.unproject([750, 850], 0), {icon: violetIcon}).addTo(map);
-        violetMarker1.bindPopup("<b>Quartier VIP / Casino</b><br>Zone de divertissement nocturne.");
-
-        var violetMarker2 = L.marker(map.unproject([350, 250], 0), {icon: violetIcon}).addTo(map);
-        violetMarker2.bindPopup("<b>Laboratoire Secret</b><br>Recherches top-secret.");
 
         // ------------------------------------------
 
