@@ -18,8 +18,7 @@
             background-color: #2c68a6; 
         }
 
-        /* Applique une opacité à 75% (25% de transparence), 
-            permet de cliquer à través le logo global et conserve les proportions */
+        /* Applique une opacité à 75% (25% de transparence) sur le logo */
         .watermark-logo {
             opacity: 0.75;
             pointer-events: none; 
@@ -31,7 +30,7 @@
             cursor: pointer;
         }
 
-        /* Style pour l'encadré des coordonnées en direct */
+        /* Style pour l'encadré des coordonnées en direct (bas gauche) */
         .coord-box {
             background: rgba(0, 0, 0, 0.75);
             color: #fff;
@@ -45,127 +44,71 @@
         /* ==========================================
            🧭 STYLE DU MENU LATÉRAL GAUCHE
            ========================================== */
-        .map-sidebar {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 320px;
-            max-height: 80vh;
-            background: rgba(18, 18, 18, 0.90);
+        .map-menu {
+            background: rgba(20, 30, 45, 0.9);
             color: #fff;
-            border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            z-index: 1000;
+            font-family: sans-serif;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 280px;
+            max-height: 80vh;
             overflow-y: auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .map-sidebar h2 {
-            font-size: 18px;
+        .map-menu h3 {
             margin-top: 0;
             margin-bottom: 12px;
+            font-size: 16px;
             text-align: center;
-            color: #e5e5e5;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 8px;
+            color: #ffcc00;
         }
 
-        /* Barre de recherche */
-        .search-box {
-            width: 100%;
-            padding: 8px 12px;
-            box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 14px;
+        .search-container {
             margin-bottom: 15px;
-            outline: none;
-        }
-        .search-box:focus {
-            border-color: #2c68a6;
-            background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Catégories et éléments */
-        .category-section {
-            margin-bottom: 12px;
-        }
-        .category-title {
-            font-weight: bold;
+        .search-container input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #4a6fa5;
+            border-radius: 4px;
+            color: #fff;
             font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
         }
 
-        .marker-item {
+        .search-container input:focus {
+            outline: none;
+            border-color: #ffcc00;
+        }
+
+        .category-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
             background: rgba(255, 255, 255, 0.05);
             padding: 6px 10px;
-            border-radius: 5px;
-            margin-bottom: 4px;
-            font-size: 13px;
-        }
-        .marker-item span {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-right: 10px;
+            border-radius: 4px;
         }
 
-        /* Style de l'interrupteur On/Off */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 36px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-        .switch input { 
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
+        .category-item label {
             cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #555;
-            transition: .3s;
-            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #2ecc71;
-        }
-        input:checked + .slider:before {
-            transform: translateX(16px);
+
+        .category-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
         }
     </style>
 </head>
@@ -173,13 +116,6 @@
 
     <!-- Conteneur de la carte -->
     <div id="map"></div>
-
-    <!-- Menu Latéral Interactif -->
-    <div id="sidebar-menu" class="map-sidebar">
-        <h2>🗺️ Filtres & Repères</h2>
-        <input type="text" id="searchInput" class="search-box" placeholder="Rechercher (ex: crocodile)...">
-        <div id="menuCategories"></div>
-    </div>
 
     <!-- Chargement du moteur Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -207,16 +143,9 @@
 
         map.setMaxBounds(bounds);
         
-        // 1. Conversion correcte du pixel central (512, 512) en coordonnées de la carte
+        // Conversion et centrage initial
         var center = map.unproject([512, 512], 0);
-
-        // 2. Application du centrage initial
         map.setView(center, 0);
-
-        // Empêche les clics/scrolls du menu de bouger la carte
-        var sidebar = document.getElementById('sidebar-menu');
-        L.DomEvent.disableClickPropagation(sidebar);
-        L.DomEvent.disableScrollPropagation(sidebar);
 
         // ==========================================
         // 🏴 LOGO & BOUTON YOUTUBE CLIQUABLE (ZOOM 0 & 1)
@@ -224,8 +153,8 @@
         var logoUrl = 'logo.png';
 
         var logoBounds = L.latLngBounds(
-            map.unproject([700, 200], 0),   
-            map.unproject([1250, 750], 0)   
+            map.unproject([700, 200], 0),
+            map.unproject([1250, 750], 0)
         );
 
         var logoOverlay = L.imageOverlay(logoUrl, logoBounds, {
@@ -234,8 +163,8 @@
         });
 
         var youtubeBtnBounds = L.latLngBounds(
-            map.unproject([1110, 700], 0),  
-            map.unproject([1240, 745], 0)   
+            map.unproject([1110, 700], 0),
+            map.unproject([1240, 745], 0)
         );
 
         var youtubeBtnOverlay = L.rectangle(youtubeBtnBounds, {
@@ -286,157 +215,202 @@
         });
 
         // ==========================================
-        // 🎨 CONFIGURATION DES ICÔNES ET CATÉGORIES
+        // 🎨 CONFIGURATION DES ICÔNES DE COULEUR
         // ==========================================
+        var shadowUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png';
+        
         var icons = {
-            green: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-            }),
-            blue: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-            }),
-            red: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-            }),
-            orange: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-            }),
-            violet: new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-            })
+            green: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', shadowUrl: shadowUrl, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            blue: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', shadowUrl: shadowUrl, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            red: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', shadowUrl: shadowUrl, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            orange: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png', shadowUrl: shadowUrl, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+            violet: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png', shadowUrl: shadowUrl, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] })
         };
 
-        // Données structurées des catégories et de leurs repères
-        var categoriesData = [
+        // ==========================================
+        // 📋 LISTE CENTRALISÉE DE TOUS LES MARQUEURS
+        // ==========================================
+        // Chaque marqueur possède ses coordonnées, sa catégorie, un titre et une description (utile pour la recherche)
+        var markersData = [
+            // --- VERT : Faune et Flore ---
             {
-                key: "green",
-                title: "Faune et Flore",
-                hex: "#2ecc71",
-                items: [
-                    { name: "Réserve Naturelle", desc: "Zone forestière protégée avec habitat de crocodile.", coords: [800, 600] },
-                    { name: "Domaine Agricole", desc: "Terres cultivables de l'Ouest.", coords: [150, 900] }
-                ]
+                category: 'green',
+                coords: [512, 512],
+                title: "Capitale de Leonida",
+                desc: "Le cœur de la nation et point de départ."
             },
             {
-                key: "blue",
-                title: "Objets Cachés",
-                hex: "#3498db",
-                items: [
-                    { name: "Zone Portuaire", desc: "Arrivée des marchandises.", coords: [200, 400] },
-                    { name: "Poste de Sécurité Nord", desc: "Contrôle maritime.", coords: [650, 300] }
-                ]
+                category: 'green',
+                coords: [800, 600],
+                title: "Réserve Naturelle",
+                desc: "Zone forestière protégée abritant un crocodile géant."
             },
             {
-                key: "red",
-                title: "Véhicules Cachés",
-                hex: "#e74c3c",
-                items: [
-                    { name: "Capitale de Leonida", desc: "Le cœur de la nation et point de départ.", coords: [512, 512] },
-                    { name: "Avant-poste de l'Est", desc: "Zone militaire sous haute surveillance.", coords: [300, 700] }
-                ]
+                category: 'green',
+                coords: [150, 900],
+                title: "Domaine Agricole",
+                desc: "Terres cultivables de l'Ouest."
+            },
+
+            // --- BLEU : Objets Cachés ---
+            {
+                category: 'blue',
+                coords: [200, 400],
+                title: "Zone Portuaire",
+                desc: "Arrivée des marchandises et caisses cachées."
             },
             {
-                key: "orange",
-                title: "Spots et Lieux Cachés",
-                hex: "#e67e22",
-                items: [
-                    { name: "Chantier Industriel", desc: "Zone de construction en cours.", coords: [450, 200] },
-                    { name: "Dépôt de Carburant", desc: "Ravitaillement principal.", coords: [900, 450] }
-                ]
+                category: 'blue',
+                coords: [650, 300],
+                title: "Poste de Sécurité Nord",
+                desc: "Contrôle maritime et objets de contrebande."
+            },
+
+            // --- ROUGE : Véhicules Cachés ---
+            {
+                category: 'red',
+                coords: [300, 700],
+                title: "Avant-poste de l'Est",
+                desc: "Zone militaire sous haute surveillance avec véhicules blindés."
             },
             {
-                key: "violet",
-                title: "Secrets et Mystères",
-                hex: "#9b59b6",
-                items: [
-                    { name: "Quartier VIP / Casino", desc: "Zone de divertissement nocturne.", coords: [750, 850] },
-                    { name: "Laboratoire Secret", desc: "Recherches top-secret.", coords: [350, 250] }
-                ]
+                category: 'red',
+                coords: [450, 200],
+                title: "Chantier Industriel",
+                desc: "Engins de chantier et camions spéciaux abandonnés."
+            },
+
+            // --- ORANGE : Spots et Lieux Cachés ---
+            {
+                category: 'orange',
+                coords: [900, 450],
+                title: "Dépôt de Carburant",
+                desc: "Ravitaillement principal et spot de saut en parachute."
+            },
+            {
+                category: 'orange',
+                coords: [350, 250],
+                title: "Belvédère de la falaise",
+                desc: "Panorama exceptionnel sur toute la baie."
+            },
+
+            // --- VIOLET : Secrets et Mystères ---
+            {
+                category: 'violet',
+                coords: [750, 850],
+                title: "Quartier VIP / Casino",
+                desc: "Zone de divertissement nocturne et énigme mystérieuse."
+            },
+            {
+                category: 'violet',
+                coords: [150, 200],
+                title: "Laboratoire Secret",
+                desc: "Recherches top-secret abandonnées dans les marais."
             }
         ];
 
-        // Génération automatique des marqueurs sur la carte et construction du menu
-        var menuContainer = document.getElementById('menuCategories');
-        
-        categoriesData.forEach(function(cat, catIndex) {
-            // Création de la section de catégorie dans le menu
-            var sectionDiv = document.createElement('div');
-            sectionDiv.className = 'category-section';
-            sectionDiv.innerHTML = `
-                <div class="category-title">
-                    <span class="dot" style="background-color: ${cat.hex};"></span>
-                    ${cat.title}
+        // Tableau pour stocker les objets Leaflet des marqueurs sur la carte
+        var activeMarkers = [];
+
+        // Fonction pour afficher tous les marqueurs selon l'état des filtres et de la recherche
+        function renderMarkers() {
+            // Supprime les marqueurs actuels de la carte
+            activeMarkers.forEach(function(item) {
+                map.removeLayer(item.marker);
+            });
+            activeMarkers = [];
+
+            // Récupère l'état des checkboxes du menu
+            var showGreen = document.getElementById('filter-green').checked;
+            var showBlue = document.getElementById('filter-blue').checked;
+            var showRed = document.getElementById('filter-red').checked;
+            var showOrange = document.getElementById('filter-orange').checked;
+            var showViolet = document.getElementById('filter-violet').checked;
+
+            // Récupère le texte de recherche en minuscules
+            var searchText = document.getElementById('search-input').value.toLowerCase();
+
+            // Parcourt la liste de tous les marqueurs
+            markersData.forEach(function(data) {
+                // 1. Vérifie le filtre de catégorie (On/Off)
+                var categoryVisible = false;
+                if (data.category === 'green' && showGreen) categoryVisible = true;
+                if (data.category === 'blue' && showBlue) categoryVisible = true;
+                if (data.category === 'red' && showRed) categoryVisible = true;
+                if (data.category === 'orange' && showOrange) categoryVisible = true;
+                if (data.category === 'violet' && showViolet) categoryVisible = true;
+
+                if (!categoryVisible) return; // Ignore si la catégorie est désactivée
+
+                // 2. Vérifie la recherche par mot-clé (dans le titre ou la description)
+                var fullText = (data.title + " " + data.desc).toLowerCase();
+                if (searchText && !fullText.includes(searchText)) {
+                    return; // Ignore si le mot recherché n'y est pas
+                }
+
+                // 3. Crée et ajoute le marqueur sur la carte
+                var marker = L.marker(map.unproject(data.coords, 0), { icon: icons[data.category] }).addTo(map);
+                marker.bindPopup(`<b>${data.title}</b><br>${data.desc}`);
+
+                activeMarkers.push({ marker: marker, data: data });
+            });
+        }
+
+        // ==========================================
+        // 🧭 CRÉATION DU MENU FLOTTANT (GAUCHE)
+        // ==========================================
+        var menuControl = L.control({position: 'topleft'});
+        menuControl.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'map-menu');
+            div.innerHTML = `
+                <h3>Filtres & Recherche</h3>
+                
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="🔍 Rechercher (ex: crocodile)..." oninput="renderMarkers()">
+                </div>
+
+                <div class="category-item">
+                    <label style="color: #4ade80;">
+                        <input type="checkbox" id="filter-green" checked onchange="renderMarkers()"> Faune et Flore
+                    </label>
+                </div>
+
+                <div class="category-item">
+                    <label style="color: #60a5fa;">
+                        <input type="checkbox" id="filter-blue" checked onchange="renderMarkers()"> Objets Cachés
+                    </label>
+                </div>
+
+                <div class="category-item">
+                    <label style="color: #f87171;">
+                        <input type="checkbox" id="filter-red" checked onchange="renderMarkers()"> Véhicules Cachés
+                    </label>
+                </div>
+
+                <div class="category-item">
+                    <label style="color: #fb923c;">
+                        <input type="checkbox" id="filter-orange" checked onchange="renderMarkers()"> Spots et Lieux Cachés
+                    </label>
+                </div>
+
+                <div class="category-item">
+                    <label style="color: #c084fc;">
+                        <input type="checkbox" id="filter-violet" checked onchange="renderMarkers()"> Secrets et Mystères
+                    </label>
                 </div>
             `;
 
-            cat.items.forEach(function(item, itemIndex) {
-                // Création du marqueur Leaflet
-                var marker = L.marker(map.unproject(item.coords, 0), { icon: icons[cat.key] }).addTo(map);
-                marker.bindPopup(`<b>${item.name}</b><br>${item.desc}`);
-                
-                // On stocke la référence du marker et ses infos textuelles pour la recherche
-                item.markerInstance = marker;
-                item.searchText = (item.name + " " + item.desc).toLowerCase();
+            // Empêche les clics sur le menu de bouger la carte en arrière-plan
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
 
-                // Création de la ligne dans le menu pour ce repère
-                var itemDiv = document.createElement('div');
-                itemDiv.className = 'marker-item';
-                itemDiv.setAttribute('data-search', item.searchText);
-                itemDiv.innerHTML = `
-                    <span>${item.name}</span>
-                    <label class="switch">
-                        <input type="checkbox" checked data-cat="${catIndex}" data-item="${itemIndex}">
-                        <span class="slider"></span>
-                    </label>
-                `;
+            return div;
+        };
+        menuControl.addTo(map);
 
-                // Événement sur l'interrupteur On/Off
-                var checkbox = itemDiv.querySelector('input');
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        map.addLayer(item.markerInstance);
-                    } else {
-                        map.removeLayer(item.markerInstance);
-                    }
-                });
-
-                sectionDiv.appendChild(itemDiv);
-            });
-
-            menuContainer.appendChild(sectionDiv);
-        });
-
-        // ==========================================
-        // 🔍 FILTRE DE RECHERCHE DYNAMIQUE
-        // ==========================================
-        document.getElementById('searchInput').addEventListener('input', function() {
-            var query = this.value.toLowerCase().trim();
-            var markerItems = document.querySelectorAll('.marker-item');
-
-            markerItems.forEach(function(el) {
-                var text = el.getAttribute('data-search');
-                if (text.includes(query)) {
-                    el.style.display = 'flex';
-                } else {
-                    el.style.display = 'none';
-                }
-            });
-        });
-
-        // ------------------------------------------
-
-        // 3. Empêche les bugs de décalage au premier chargement complet
+        // Chargement initial des marqueurs au démarrage
         setTimeout(function() {
+            renderMarkers();
             map.invalidateSize();
         }, 100);
     </script>
